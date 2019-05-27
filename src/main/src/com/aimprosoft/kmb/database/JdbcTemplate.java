@@ -4,16 +4,23 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.aimprosoft.kmb.exceptions.RepositoryException;
+import org.apache.log4j.Logger;
+
 public class JdbcTemplate {
 
-    public void deleteById(Connection connection, String sql, long id) {
+    private static Logger logger = Logger.getLogger(JdbcTemplate.class);
+
+    public void deleteById(Connection connection, String sql, long id) throws RepositoryException {
 
         try {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
+            preparedStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Can`t delete", e);
+            throw new RepositoryException(e);
         }
     }
 }

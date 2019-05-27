@@ -2,6 +2,7 @@ package com.aimprosoft.kmb.service;
 
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class EmployeeServiceTest {
 
     @Ignore
     @Test
-    public void returnEmployeeIdIfEmployeeSavedInData() {
+    public void returnEmployeeIdIfEmployeeSavedInData() throws ServiceException {
         final EmployeeService employeeService = new EmployeeService();
         final Employee employee = new Employee();
         final DepartmentService departmentService = new DepartmentService();
@@ -33,7 +34,7 @@ public class EmployeeServiceTest {
 
     @Ignore
     @Test
-    public void returnEmployeeIfEmployeeUpdated() {
+    public void returnEmployeeIfEmployeeUpdated() throws ServiceException {
 
         final EmployeeService employeeService = new EmployeeService();
         final Employee employeeById = employeeService.getEmployeeById(6);
@@ -52,7 +53,7 @@ public class EmployeeServiceTest {
 
     @Ignore
     @Test
-    public void returnNullIfEmployeeDeleteFromData() {
+    public void returnNullIfEmployeeDeleteFromData() throws ServiceException {
         final EmployeeService employeeService = new EmployeeService();
         employeeService.deleteEmployee(6);
     }

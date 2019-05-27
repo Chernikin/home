@@ -18,26 +18,32 @@
         <tr>
             <td>First name</td>
             <td><input type="text" name="firstName" value="${employee.firstName}"></td>
+            <td><c:out value="${errors.firstName}"> </c:out></td>
         </tr>
         <tr>
             <td>Last name</td>
             <td><input type="text" name="lastName" value="${employee.lastName}"></td>
+            <td><c:out value="${errors.lastName}"> </c:out></td>
         </tr>
         <tr>
             <td>Email</td>
             <td><input type="text" name="email" value="${employee.email}"></td>
+            <td><c:out value="${errors.email}"> </c:out></td>
         </tr>
         <tr>
             <td>Age</td>
             <td><input type="text" name="age" value="${employee.age}"></td>
+            <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
             <td>Phone number</td>
             <td><input type="text" name="phoneNumber" value="${employee.phoneNumber}"></td>
+            <td><c:out value="${errors.phoneNumber}"> </c:out></td>
         </tr>
         <tr>
             <td>Employment date</td>
             <td><input type="date" name="employmentDate" value="${employee.employmentDate}"></td>
+            <td><c:out value="${errors.employmentDate}"> </c:out></td>
         </tr>
         <tr>
             <td>Department id</td>

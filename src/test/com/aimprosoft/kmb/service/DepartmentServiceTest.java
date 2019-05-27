@@ -1,28 +1,27 @@
 package com.aimprosoft.kmb.service;
 
 import com.aimprosoft.kmb.domain.Department;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
 
 public class DepartmentServiceTest {
 
     @Ignore
     @Test
-    public void returnDepartmentIdIfDepartmentSavedInData() {
+    public void returnDepartmentIdIfDepartmentSavedInData() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
         final Department department = new Department();
         department.setDepartmentName("Test name");
         department.setComments("Test comments");
-        final long departmentId = departmentService.createDepartment(department);
-        assertTrue(departmentId > 1);
+        departmentService.createDepartment(department);
     }
 
     @Ignore
     @Test
-    public void returnDepartmentIfDepartmentUpdated() {
+    public void returnDepartmentIfDepartmentUpdated() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
         final Department departmentById = departmentService.getDepartmentById(3);
         departmentById.setDepartmentName("NEW TEST NAME");
@@ -32,9 +31,10 @@ public class DepartmentServiceTest {
 
     @Ignore
     @Test
-    public void returnNullIfDepartmentDeleteFromData() {
+    public void returnNullIfDepartmentDeleteFromData() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
         departmentService.deleteDepartmentById(3);
     }
+
 
 }

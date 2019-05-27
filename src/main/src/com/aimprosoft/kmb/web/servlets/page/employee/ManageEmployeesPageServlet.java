@@ -1,6 +1,7 @@
 package com.aimprosoft.kmb.web.servlets.page.employee;
 
 import com.aimprosoft.kmb.domain.Employee;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.EmployeeService;
 
 import javax.servlet.ServletException;
@@ -20,8 +21,13 @@ public class ManageEmployeesPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        final List<Employee> allEmployeesFromDepartment = employeeService.getAllEmployeesFromDepartment(departmentId);
-        req.setAttribute("AllEmployeesFromDepartment", allEmployeesFromDepartment);
+        final List<Employee> allEmployeesFromDepartment;
+        try {
+            allEmployeesFromDepartment = employeeService.getAllEmployeesFromDepartment(departmentId);
+            req.setAttribute("allEmployeesFromDepartment", allEmployeesFromDepartment);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
         req.setAttribute("departmentId", departmentId);
         req.getRequestDispatcher("manage-employees-page.jsp").forward(req, resp);
     }

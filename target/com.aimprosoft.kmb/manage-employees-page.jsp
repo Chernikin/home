@@ -53,7 +53,7 @@
                     </form>
                 </td>
                 <td>
-                    <form action="delete-employee" method="get">
+                    <form action="delete-employee-action" method="get">
                         <button type="submit">delete employee</button>
                         <input type="hidden" value="${employee.id}" name="employeeId">
                         <input type="hidden" value="${departmentId}" name="departmentId">

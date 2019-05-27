@@ -1,6 +1,7 @@
 package com.aimprosoft.kmb.web.servlets;
 
 import com.aimprosoft.kmb.domain.Department;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
 
 import javax.servlet.ServletException;
@@ -19,8 +20,13 @@ public class LinkToUpdateDepartmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        final Department departmentById = departmentService.getDepartmentById(departmentId);
-        req.setAttribute("department", departmentById);
+        final Department departmentById;
+        try {
+            departmentById = departmentService.getDepartmentById(departmentId);
+            req.setAttribute("department", departmentById);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
         req.getRequestDispatcher("update-department-page.jsp").forward(req, resp);
     }
 }

@@ -1,5 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
 
 import javax.servlet.ServletException;
@@ -18,7 +19,11 @@ public class DeleteDepartmentActionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        departmentService.deleteDepartmentById(departmentId);
+        try {
+            departmentService.deleteDepartmentById(departmentId);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
         req.setAttribute("successMessage", "Department with id: " + departmentId + " deleted!");
         resp.sendRedirect("manage-departments-page");
     }

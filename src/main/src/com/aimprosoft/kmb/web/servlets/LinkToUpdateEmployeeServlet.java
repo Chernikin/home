@@ -2,6 +2,7 @@ package com.aimprosoft.kmb.web.servlets;
 
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.service.EmployeeService;
 
@@ -22,10 +23,20 @@ public class LinkToUpdateEmployeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
-        final Employee employeeById = employeeService.getEmployeeById(employeeId);
-        req.setAttribute("employee", employeeById);
-        final List<Department> allDepartments = departmentService.getAllDepartments();
-        req.setAttribute("allDepartments", allDepartments);
+        final Employee employeeById;
+        try {
+            employeeById = employeeService.getEmployeeById(employeeId);
+            req.setAttribute("employee", employeeById);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        final List<Department> allDepartments;
+        try {
+            allDepartments = departmentService.getAllDepartments();
+            req.setAttribute("allDepartments", allDepartments);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
         req.getRequestDispatcher("update-employee-page.jsp").forward(req, resp);
     }
 }

@@ -1,100 +1,98 @@
 package com.aimprosoft.kmb.service;
 
 import com.aimprosoft.kmb.database.DatabaseConnectionManager;
-import com.aimprosoft.kmb.database.dao.EmployeeDao;
+import com.aimprosoft.kmb.database.EmployeeDao;
+import com.aimprosoft.kmb.database.jdbc.EmployeeDaoJDBC;
 import com.aimprosoft.kmb.domain.Employee;
-import org.apache.log4j.Logger;
+import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public class EmployeeService {
 
-    private static Logger logger = Logger.getLogger(EmployeeService.class);
-    private final EmployeeDao employeeDao = new EmployeeDao();
+    private final EmployeeDao employeeDao = new EmployeeDaoJDBC();
 
-    public long createEmployee(Employee employee) {
+    public long createEmployee(Employee employee) throws ServiceException {
         Connection connection = null;
         try {
             connection = DatabaseConnectionManager.getConnection();
-            final long employeeId = employeeDao.create(connection, employee);
-            DatabaseConnectionManager.commit(connection);
-            return employeeId;
-        } catch (SQLException e) {
-            logger.error("Can`t create a new employee", e);
+            final boolean emailExists = employeeDao.isEmailExists(connection, employee);
+            if (!emailExists) {
+                employeeDao.create(connection, employee);
+                DatabaseConnectionManager.commit(connection);
+            }
+        } catch (RepositoryException e) {
             DatabaseConnectionManager.rollback(connection);
+            throw new ServiceException("Can`t create a new employee");
         } finally {
             DatabaseConnectionManager.closeConnection(connection);
         }
-        return -1;
+        return 0;
     }
 
 
-    public Employee getEmployeeById(long id) {
+    public Employee getEmployeeById(long id) throws ServiceException {
         Connection connection = null;
         try {
             connection = DatabaseConnectionManager.getConnection();
             return employeeDao.getById(connection, id);
-        } catch (SQLException e) {
-            logger.error("Can`t get employee by id: " + id, e);
+        } catch (RepositoryException e) {
+            throw new ServiceException("Can`t get employee by id: " + id);
         } finally {
             DatabaseConnectionManager.closeConnection(connection);
         }
-        return null;
     }
 
-    public List<Employee> getAllEmployees() {
+    public List<Employee> getAllEmployees() throws ServiceException {
         Connection connection = null;
         try {
             connection = DatabaseConnectionManager.getConnection();
             return employeeDao.getAll(connection);
-        } catch (SQLException e) {
-            logger.error("Can`t get all employees");
+        } catch (RepositoryException e) {
+            throw new ServiceException("Can`t get all employees");
         } finally {
             DatabaseConnectionManager.closeConnection(connection);
         }
-        return null;
     }
 
-    public List<Employee> getAllEmployeesFromDepartment(long id) {
+    public List<Employee> getAllEmployeesFromDepartment(long id) throws ServiceException {
         Connection connection = null;
         try {
             connection = DatabaseConnectionManager.getConnection();
             return employeeDao.getAllFromDepartment(connection, id);
-        } catch (SQLException e) {
-            logger.error("Can`t get all employees from department");
+        } catch (RepositoryException e) {
+            throw new ServiceException("Can`t get all employees from department with id: " + id);
         } finally {
             DatabaseConnectionManager.closeConnection(connection);
         }
-        return null;
     }
 
-    public Employee updateEmployee(Employee employee) {
+    public Employee updateEmployee(Employee employee) throws ServiceException {
         Connection connection = null;
         try {
             connection = DatabaseConnectionManager.getConnection();
             final Employee updatedEmployee = employeeDao.update(connection, employee);
             DatabaseConnectionManager.commit(connection);
             return updatedEmployee;
-        } catch (SQLException e) {
-            logger.error("Can`t update employee", e);
+        } catch (RepositoryException e) {
             DatabaseConnectionManager.rollback(connection);
+            throw new ServiceException("Can`t to update employee");
         } finally {
             DatabaseConnectionManager.closeConnection(connection);
         }
-        return employee;
     }
 
-    public void deleteEmployee(long id) {
+    public void deleteEmployee(long id) throws ServiceException {
         Connection connection = null;
         try {
             connection = DatabaseConnectionManager.getConnection();
             employeeDao.deleteById(connection, id);
             DatabaseConnectionManager.commit(connection);
-        } catch (SQLException e) {
-            logger.error("Can`t delete employee by id: " + id, e);
+        } catch (RepositoryException e) {
             DatabaseConnectionManager.rollback(connection);
+            throw new ServiceException("Can`t delete employee by id: " + id);
         } finally {
             DatabaseConnectionManager.closeConnection(connection);
         }
