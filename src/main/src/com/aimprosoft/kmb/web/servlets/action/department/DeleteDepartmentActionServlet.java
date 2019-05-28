@@ -22,7 +22,7 @@ public class DeleteDepartmentActionServlet extends HttpServlet {
         try {
             departmentService.deleteDepartmentById(departmentId);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
         req.setAttribute("successMessage", "Department with id: " + departmentId + " deleted!");
         resp.sendRedirect("manage-departments-page");

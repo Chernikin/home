@@ -33,7 +33,7 @@ public class UpdateDepartmentActionServlet extends HttpServlet {
             }
             updateDepartment(req, resp, departmentId, department);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
 
     }

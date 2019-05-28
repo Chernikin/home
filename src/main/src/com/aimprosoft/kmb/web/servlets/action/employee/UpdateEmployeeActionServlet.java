@@ -39,7 +39,7 @@ public class UpdateEmployeeActionServlet extends HttpServlet {
             }
             updateEmployee(req, resp, employee, departmentId);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
     }
 

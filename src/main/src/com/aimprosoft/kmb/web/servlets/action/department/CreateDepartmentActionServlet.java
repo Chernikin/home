@@ -33,7 +33,7 @@ public class CreateDepartmentActionServlet extends HttpServlet {
         try {
             createDepartment(req, resp, department);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
     }
 

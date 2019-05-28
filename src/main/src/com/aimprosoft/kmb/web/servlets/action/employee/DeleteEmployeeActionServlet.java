@@ -23,7 +23,7 @@ public class DeleteEmployeeActionServlet extends HttpServlet {
         try {
             employeeService.deleteEmployee(employeeId);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
         req.setAttribute("successMessage", "Employee with id: " + employeeId + " delete!");
         resp.sendRedirect("manage-employees-page?departmentId=" + departmentId);

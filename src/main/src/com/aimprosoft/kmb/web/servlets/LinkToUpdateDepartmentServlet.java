@@ -25,7 +25,7 @@ public class LinkToUpdateDepartmentServlet extends HttpServlet {
             departmentById = departmentService.getDepartmentById(departmentId);
             req.setAttribute("department", departmentById);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
         req.getRequestDispatcher("update-department-page.jsp").forward(req, resp);
     }

@@ -1,5 +1,6 @@
 package com.aimprosoft.kmb.database.jdbc;
 
+import com.aimprosoft.kmb.database.DatabaseConnectionManager;
 import com.aimprosoft.kmb.database.EmployeeDao;
 import com.aimprosoft.kmb.database.JdbcTemplate;
 import com.aimprosoft.kmb.domain.Department;
@@ -14,23 +15,19 @@ import java.util.List;
 
 public class EmployeeDaoJDBC implements EmployeeDao {
 
-    final JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private final JdbcTemplate jdbcTemplate = new JdbcTemplate();
     private static Logger logger = Logger.getLogger(EmployeeDaoJDBC.class);
 
     @Override
-    public long create(Connection connection, Employee employee) throws RepositoryException {
+    public long create(Employee employee) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "INSERT INTO employees (first_name, last_name, email, age, phone_number, employment_date, department_id) VALUES (?,?,?,?,?,?,?)";
 
         try {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, employee.getFirstName());
-            preparedStatement.setString(2, employee.getLastName());
-            preparedStatement.setString(3, employee.getEmail());
-            preparedStatement.setInt(4, employee.getAge());
-            preparedStatement.setString(5, employee.getPhoneNumber());
-            preparedStatement.setDate(6, new Date(employee.getEmploymentDate().getTime()));
-            preparedStatement.setLong(7, employee.getDepartment().getId());
+            setEmployeeStatement(employee, preparedStatement);
             preparedStatement.executeUpdate();
+            DatabaseConnectionManager.commit(connection);
             final ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 return resultSet.getLong(1);
@@ -38,14 +35,19 @@ public class EmployeeDaoJDBC implements EmployeeDao {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Can`t create a new employee", e);
+            DatabaseConnectionManager.rollback(connection);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
         return -1;
     }
 
     @Override
-    public Employee getById(Connection connection, long id) throws RepositoryException {
+    public Employee getById(long id) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "SELECT * FROM employees join departments on employees.department_id = departments.id WHERE employees.id = ?";
+
         try {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
@@ -57,12 +59,15 @@ public class EmployeeDaoJDBC implements EmployeeDao {
         } catch (SQLException e) {
             logger.error("Can`t get employee by id: " + id, e);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
         return null;
     }
 
     @Override
-    public List<Employee> getAll(Connection connection) throws RepositoryException {
+    public List<Employee> getAll() throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "SELECT * FROM employees join departments on employees.department_id = departments.id";
 
         try {
@@ -77,11 +82,14 @@ public class EmployeeDaoJDBC implements EmployeeDao {
         } catch (SQLException e) {
             logger.error("Can`t get all employees", e);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
     }
 
     @Override
-    public List<Employee> getAllFromDepartment(Connection connection, long departmentId) throws RepositoryException {
+    public List<Employee> getAllFromDepartment(long departmentId) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "SELECT * FROM employees join departments on employees.department_id = departments.id WHERE department_id = ?";
 
         try {
@@ -97,11 +105,14 @@ public class EmployeeDaoJDBC implements EmployeeDao {
         } catch (SQLException e) {
             logger.error("Can`t get all employees from department with id: " + departmentId, e);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
     }
 
     @Override
-    public boolean isEmailExists(Connection connection, Employee employee) throws RepositoryException {
+    public boolean isEmailExists(Employee employee) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "SELECT count(id) FROM employees WHERE email = ?";
 
         try {
@@ -116,36 +127,38 @@ public class EmployeeDaoJDBC implements EmployeeDao {
         } catch (SQLException e) {
             logger.error("Can`t check the existence same email of the employee");
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
-
         return false;
     }
 
     @Override
-    public Employee update(Connection connection, Employee employee) throws RepositoryException {
+    public Employee update(Employee employee) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "UPDATE employees SET first_name = ?, last_name = ?, email = ?, age = ?, phone_number = ?, employment_date = ?, department_id = ? WHERE id = ?";
+
         try {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, employee.getFirstName());
-            preparedStatement.setString(2, employee.getLastName());
-            preparedStatement.setString(3, employee.getEmail());
-            preparedStatement.setInt(4, employee.getAge());
-            preparedStatement.setString(5, employee.getPhoneNumber());
-            preparedStatement.setDate(6, new Date(employee.getEmploymentDate().getTime()));
-            preparedStatement.setLong(7, employee.getDepartment().getId());
+            setEmployeeStatement(employee, preparedStatement);
             preparedStatement.setLong(8, employee.getId());
             preparedStatement.executeUpdate();
+            DatabaseConnectionManager.commit(connection);
             preparedStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Can`t update an employee");
+            DatabaseConnectionManager.rollback(connection);
+            throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
         return employee;
     }
 
     @Override
-    public void deleteById(Connection connection, long id) throws RepositoryException {
-        String sql = "DELETE FROM employees WHERE id = ?";
-        jdbcTemplate.deleteById(connection, sql, id);
+    public void deleteById(long id) throws RepositoryException {
+        String sql = "employees";
+        jdbcTemplate.deleteById(sql, id);
 
     }
 
@@ -164,5 +177,15 @@ public class EmployeeDaoJDBC implements EmployeeDao {
         department.setComments(resultSet.getString("comments"));
         employee.setDepartment(department);
         return employee;
+    }
+
+    private void setEmployeeStatement(Employee employee, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, employee.getFirstName());
+        preparedStatement.setString(2, employee.getLastName());
+        preparedStatement.setString(3, employee.getEmail());
+        preparedStatement.setInt(4, employee.getAge());
+        preparedStatement.setString(5, employee.getPhoneNumber());
+        preparedStatement.setDate(6, new Date(employee.getEmploymentDate().getTime()));
+        preparedStatement.setLong(7, employee.getDepartment().getId());
     }
 }

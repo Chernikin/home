@@ -37,7 +37,7 @@ public class CreateEmployeeActionServlet extends HttpServlet {
         try {
             createEmployee(req, resp, employee);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
 
 

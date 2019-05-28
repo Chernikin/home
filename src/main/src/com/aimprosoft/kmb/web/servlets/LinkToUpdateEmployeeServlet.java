@@ -28,14 +28,14 @@ public class LinkToUpdateEmployeeServlet extends HttpServlet {
             employeeById = employeeService.getEmployeeById(employeeId);
             req.setAttribute("employee", employeeById);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
         final List<Department> allDepartments;
         try {
             allDepartments = departmentService.getAllDepartments();
             req.setAttribute("allDepartments", allDepartments);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
         req.getRequestDispatcher("update-employee-page.jsp").forward(req, resp);
     }

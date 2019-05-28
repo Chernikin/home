@@ -8,13 +8,12 @@
 <%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Error</title>
+    <title>Error Page</title>
 </head>
 <body>
 
 <h3>Sorry, an error is happened!</h3>
-Error:
-<div><%=exception.getMessage()%>
+<div>Error: <%=exception.getMessage()%>
 </div>
 </body>
 </html>

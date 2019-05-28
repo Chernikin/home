@@ -1,9 +1,10 @@
 package com.aimprosoft.kmb.database.jdbc;
 
+import com.aimprosoft.kmb.database.DatabaseConnectionManager;
 import com.aimprosoft.kmb.database.DepartmentDao;
 import com.aimprosoft.kmb.database.JdbcTemplate;
-import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.domain.Department;
+import com.aimprosoft.kmb.exceptions.RepositoryException;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -18,15 +19,22 @@ public class DepartmentDaoJDBC implements DepartmentDao {
     private final JdbcTemplate jdbcTemplate = new JdbcTemplate();
     private static Logger logger = Logger.getLogger(DepartmentDaoJDBC.class);
 
+   /* private Connection getConnection() throws RepositoryException {
+        final Connection connection = DatabaseConnectionManager.getConnection();
+        return connection; // todo
+    }*/
+
     @Override
-    public long create(Connection connection, Department department) throws RepositoryException {
+    public long create(Department department) throws RepositoryException {
         String sql = "INSERT INTO departments(department_name, comments) VALUES (?, ?)";
+        Connection connection = DatabaseConnectionManager.getConnection();
 
         try {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, department.getDepartmentName());
             preparedStatement.setString(2, department.getComments());
             preparedStatement.executeUpdate();
+            DatabaseConnectionManager.commit(connection);
             final ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 return resultSet.getLong(1);
@@ -34,13 +42,17 @@ public class DepartmentDaoJDBC implements DepartmentDao {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Can`t create a new department", e);
+            DatabaseConnectionManager.rollback(connection);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
         return -1;
     }
 
     @Override
-    public Department getById(Connection connection, long id) throws RepositoryException {
+    public Department getById(long id) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "SELECT * FROM departments WHERE id = ?";
 
         try {
@@ -54,12 +66,15 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         } catch (SQLException e) {
             logger.error("Can`t get department by id: " + id, e);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
         return null;
     }
 
     @Override
-    public List<Department> getAll(Connection connection) throws RepositoryException {
+    public List<Department> getAll() throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "SELECT * FROM departments";
 
         try {
@@ -74,12 +89,14 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         } catch (SQLException e) {
             logger.error("Can`t get all the departments", e);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
-        //return Collections.emptyList();
     }
 
     @Override
-    public Department update(Connection connection, Department department) throws RepositoryException {
+    public Department update(Department department) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "UPDATE departments SET department_name = ?, comments = ? WHERE id = ?";
 
         try {
@@ -88,23 +105,28 @@ public class DepartmentDaoJDBC implements DepartmentDao {
             preparedStatement.setString(2, department.getComments());
             preparedStatement.setLong(3, department.getId());
             preparedStatement.executeUpdate();
+            DatabaseConnectionManager.commit(connection);
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Can`t to update the department with id: " + department.getId(), e);
+            DatabaseConnectionManager.rollback(connection);
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
         return department;
     }
 
     @Override
-    public void deleteById(Connection connection, long id) throws RepositoryException {
-        String sql = "DELETE FROM departments WHERE id = ?";
-        jdbcTemplate.deleteById(connection, sql, id);
+    public void deleteById(long id) throws RepositoryException {
+        String sql = "departments";
+        jdbcTemplate.deleteById(sql, id);
 
     }
 
     @Override
-    public boolean isDepartmentExists(Connection connection, Department department) throws RepositoryException {
+    public boolean isDepartmentExists(Department department) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
         String sql = "SELECT count(id) FROM departments WHERE department_name = ?";
 
         try {
@@ -119,6 +141,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         } catch (SQLException e) {
             logger.error("Can`t check the existence same name of the department");
             throw new RepositoryException(e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
         return false;
     }

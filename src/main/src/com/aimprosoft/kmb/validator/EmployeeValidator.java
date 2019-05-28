@@ -9,9 +9,9 @@ public class EmployeeValidator implements Validator<Employee> {
     public static final int MAX_FIRST_NAME_LENGTH = 25;
     public static final int MAX_LAST_NAME_LENGTH = 30;
     public static final int MAX_EMAIL_LENGTH = 50;
-    public static final int MAX_AGE_LENGTH = 3;
-    public static final int MAX_AGE = 105;
+    public static final int MAX_AGE = 99;
     public static final int MAX_PHONE_NUMBER_LENGTH = 13;
+    public static final int DEP_NOT_VALID_NUMBER = 0;
 
     @Override
     public ValidationResult validate(Employee employee) {
@@ -34,6 +34,9 @@ public class EmployeeValidator implements Validator<Employee> {
         if (!validateEmploymentDate(employee)) {
             validationResult.addErrorMessage("employmentDate", "Employment date is not valid");
         }
+       /* if (!validateDepartmentId(employee)) {
+            validationResult.addErrorMessage("departmentId", "Department id is not valid");
+        }*/
         return validationResult;
     }
 
@@ -54,7 +57,7 @@ public class EmployeeValidator implements Validator<Employee> {
 
     public boolean validateAge(Employee employee) {
         final int age = employee.getAge();
-        return String.valueOf(age).length() <= MAX_AGE_LENGTH && age <= MAX_AGE;
+        return age <= MAX_AGE;
     }
 
     public boolean validatePhoneNumber(Employee employee) {
@@ -65,5 +68,10 @@ public class EmployeeValidator implements Validator<Employee> {
     public boolean validateEmploymentDate(Employee employee) {
         final Date employmentDate = employee.getEmploymentDate();
         return employmentDate != null;
+    }
+
+    public boolean validateDepartmentId(Employee employee) {
+        final long departmentId = employee.getDepartment().getId();
+        return departmentId > DEP_NOT_VALID_NUMBER;
     }
 }
