@@ -14,8 +14,8 @@ public class DepartmentServiceTest {
     public void returnDepartmentIdIfDepartmentSavedInData() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
         final Department department = new Department();
-        department.setDepartmentName("Test name");
-        department.setComments("Test comments");
+        department.setDepartmentName("TestNewItems name");
+        department.setComments("TestNewItems comments");
         departmentService.createDepartment(department);
     }
 

@@ -14,9 +14,11 @@ public class EmployeeService {
 
     public long createEmployee(Employee employee) throws ServiceException {
         try {
-            final boolean emailExists = employeeDao.isEmailExists(employee);
+            final boolean emailExists = employeeDao.isExists(employee);
             if (!emailExists) {
                 employeeDao.create(employee);
+            } else {
+                throw new ServiceException("Can`t create employee, because this email already used!");
             }
         } catch (RepositoryException e) {
             throw new ServiceException("Can`t create a new employee");
@@ -29,7 +31,7 @@ public class EmployeeService {
         try {
             return employeeDao.getById(id);
         } catch (RepositoryException e) {
-            throw new ServiceException("Can`t get employee by id: " + id);
+            throw new ServiceException("Can`t getById employee by id: " + id);
         }
     }
 
@@ -37,7 +39,7 @@ public class EmployeeService {
         try {
             return employeeDao.getAll();
         } catch (RepositoryException e) {
-            throw new ServiceException("Can`t get all employees");
+            throw new ServiceException("Can`t getById all employees");
         }
     }
 
@@ -45,7 +47,7 @@ public class EmployeeService {
         try {
             return employeeDao.getAllFromDepartment(id);
         } catch (RepositoryException e) {
-            throw new ServiceException("Can`t get all employees from department with id: " + id);
+            throw new ServiceException("Can`t getById all employees from department with id: " + id);
         }
     }
 

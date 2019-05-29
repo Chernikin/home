@@ -15,9 +15,11 @@ public class DepartmentService {
 
     public void createDepartment(Department department) throws ServiceException {
         try {
-            final boolean departmentExists = departmentDao.isDepartmentExists(department);
+            final boolean departmentExists = departmentDao.isExists(department);
             if (!departmentExists) {
                 departmentDao.create(department);
+            } else {
+                throw new ServiceException("Can`t create department, because this department name already used!");
             }
         } catch (RepositoryException e) {
             throw new ServiceException("Can`t create a new department");
@@ -28,7 +30,7 @@ public class DepartmentService {
         try {
             return departmentDao.getById(id);
         } catch (RepositoryException e) {
-            throw new ServiceException("Can`t get the department by id: " + id);
+            throw new ServiceException("Can`t getById the department by id: " + id);
         }
     }
 
@@ -37,7 +39,7 @@ public class DepartmentService {
         try {
             return departmentDao.getAll();
         } catch (RepositoryException e) {
-            throw new ServiceException("Can`t get all the departments");
+            throw new ServiceException("Can`t getById all the departments");
         }
     }
 

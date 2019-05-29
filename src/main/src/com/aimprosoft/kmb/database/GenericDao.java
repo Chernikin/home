@@ -6,13 +6,15 @@ import java.util.List;
 
 public interface GenericDao<T> {
 
-    long create(T object) throws RepositoryException;
+    void create(T object) throws RepositoryException;
 
     T getById(long id) throws RepositoryException;
 
     List<T> getAll() throws RepositoryException;
 
     T update(T object) throws RepositoryException;
+
+    boolean isExists(T object) throws RepositoryException;
 
     void deleteById(long id) throws RepositoryException;
 

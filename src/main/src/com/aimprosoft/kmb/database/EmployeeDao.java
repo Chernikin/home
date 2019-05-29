@@ -9,5 +9,5 @@ public interface EmployeeDao extends GenericDao<Employee> {
 
     List<Employee> getAllFromDepartment(long id) throws RepositoryException;
 
-    boolean isEmailExists(Employee employee) throws RepositoryException;
+    //boolean isEmailExists(Employee employee) throws RepositoryException;
 }

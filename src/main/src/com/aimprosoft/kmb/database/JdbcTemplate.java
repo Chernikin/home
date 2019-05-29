@@ -1,43 +1,149 @@
 package com.aimprosoft.kmb.database;
 
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class JdbcTemplate {
+public class JdbcTemplate<T> {
 
     private static Logger logger = Logger.getLogger(JdbcTemplate.class);
 
-    /*public long create(String sql, PreparedStatement ps) throws RepositoryException {
-        Connection connection = DatabaseConnectionManager.getConnection();
-        try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.executeUpdate();
 
-            DatabaseConnectionManager.commit(connection);
-            final ResultSet resultSet = preparedStatement.getGeneratedKeys();
+    public void create(String sql, List<Object> params, String log) throws RepositoryException {
+        getLogicForUpdate(sql, params, log);
+    }
+
+    public T getById(String sql, long id, RowMapper<T> rowMapper) throws RepositoryException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        T result = null;
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+            final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getLong(1);
+                result = rowMapper.extract(resultSet);
             }
-            preparedStatement.close();
         } catch (SQLException e) {
-            logger.error("Can`t create a new", e);
+            logger.error("Can`t get by id: " + id, e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            DatabaseConnectionManager.closeConnection(connection);
+        }
+        return result;
+    }
+
+
+    public List<T> getAll(String sql, RowMapper<T> rowMapper) throws RepositoryException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            final List<T> all = new ArrayList<>();
+            while (resultSet.next()) {
+                all.add(rowMapper.extract(resultSet));
+            }
+            return all;
+        } catch (SQLException e) {
+            logger.error("Can`t get all", e);
+            throw new RepositoryException(e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            DatabaseConnectionManager.closeConnection(connection);
+        }
+    }
+
+    public T update(String sql, List<Object> params, String log) throws RepositoryException {
+        getLogicForUpdate(sql, params, log);
+        return null;
+    }
+
+
+    private void getLogicForUpdate(String sql, List<Object> params, String log) throws RepositoryException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.size(); i++) {
+                preparedStatement.setObject(i + 1, params.get(i));
+            }
+            preparedStatement.executeUpdate();
+            DatabaseConnectionManager.commit(connection);
+        } catch (SQLException e) {
+            logger.error(log, e);
             DatabaseConnectionManager.rollback(connection);
             throw new RepositoryException(e);
         } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             DatabaseConnectionManager.closeConnection(connection);
         }
-        return -1;
-    }*/
+    }
+
+    public boolean isExist(String sql, List<Object> params, String log) throws RepositoryException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.size(); i++) {
+                preparedStatement.setObject(i + 1, params.get(i));
+            }
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                final int result = resultSet.getInt("count(id)");
+                return result == 1;
+            }
+        } catch (SQLException e) {
+            logger.error(log);
+            throw new RepositoryException(e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DatabaseConnectionManager.closeConnection(connection);
+        }
+        return false;
+    }
+
 
     public void deleteById(String sql, long id) throws RepositoryException {
         Connection connection = DatabaseConnectionManager.getConnection();
-        String sqlTemplate = "DELETE FROM " + sql + " WHERE id = ?";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sqlTemplate);
+            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             DatabaseConnectionManager.commit(connection);
@@ -50,4 +156,6 @@ public class JdbcTemplate {
             DatabaseConnectionManager.closeConnection(connection);
         }
     }
+
+
 }
