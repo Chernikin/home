@@ -62,7 +62,7 @@ public class JdbcTemplate<T> {
             return all;
         } catch (SQLException e) {
             logger.error("Can`t get all", e);
-            throw new RepositoryException(e);
+            throw new RepositoryException("Can`t get all");
         } finally {
             try {
                 if (preparedStatement != null) {
@@ -95,7 +95,7 @@ public class JdbcTemplate<T> {
         } catch (SQLException e) {
             logger.error(log, e);
             DatabaseConnectionManager.rollback(connection);
-            throw new RepositoryException(e);
+            throw new RepositoryException("Can`t get logic");
         } finally {
             if (preparedStatement != null) {
                 try {
@@ -125,7 +125,7 @@ public class JdbcTemplate<T> {
             }
         } catch (SQLException e) {
             logger.error(log);
-            throw new RepositoryException(e);
+            throw new RepositoryException("Can`t check items on exist");
         } finally {
             if (preparedStatement != null) {
                 try {
@@ -151,7 +151,7 @@ public class JdbcTemplate<T> {
         } catch (SQLException e) {
             logger.error("Can`t delete", e);
             DatabaseConnectionManager.rollback(connection);
-            throw new RepositoryException(e);
+            throw new RepositoryException("Can`t delete");
         } finally {
             DatabaseConnectionManager.closeConnection(connection);
         }

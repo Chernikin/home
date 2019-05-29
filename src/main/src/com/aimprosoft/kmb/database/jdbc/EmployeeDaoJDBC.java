@@ -26,8 +26,7 @@ public class EmployeeDaoJDBC implements EmployeeDao {
         List<Object> params = new ArrayList<>();
         params.add(employee.getEmail());
         String log = "Can`t check the existence same email of the employee";
-        final boolean exist = jdbcTemplate.isExist(sql, params, log);
-        return exist;
+        return jdbcTemplate.isExist(sql, params, log);
     }
 
     @Override
@@ -86,7 +85,7 @@ public class EmployeeDaoJDBC implements EmployeeDao {
             return employees;
         } catch (SQLException e) {
             logger.error("Can`t get all employees from department with id: " + id, e);
-            throw new RepositoryException(e);
+            throw new RepositoryException("Can`t get all employees");
         } finally {
             try {
                 if (preparedStatement != null) {

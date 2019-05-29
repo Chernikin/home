@@ -5,6 +5,7 @@ import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJDBC;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 
 import java.util.List;
 
@@ -14,15 +15,11 @@ public class DepartmentService {
     private final DepartmentDao departmentDao = new DepartmentDaoJDBC();
 
     public void createDepartment(Department department) throws ServiceException {
-        try {
-            final boolean departmentExists = departmentDao.isExists(department);
-            if (!departmentExists) {
-                departmentDao.create(department);
-            } else {
-                throw new ServiceException("Can`t create department, because this department name already used!");
-            }
-        } catch (RepositoryException e) {
-            throw new ServiceException("Can`t create a new department");
+        final boolean departmentExists = departmentDao.isExists(department);
+        if (!departmentExists) {
+            departmentDao.create(department);
+        } else {
+            throw new ValidationException("Can`t create department, because this department name already used!");
         }
     }
 

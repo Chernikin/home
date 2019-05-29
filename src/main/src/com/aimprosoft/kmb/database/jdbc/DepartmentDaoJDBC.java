@@ -20,8 +20,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         List<Object> params = new ArrayList<>();
         params.add(department.getDepartmentName());
         String log = "Can`t check the existence same name of the department";
-        final boolean exist = jdbcTemplate.isExist(sql, params, log);
-        return exist;
+        return jdbcTemplate.isExist(sql, params, log);
     }
 
     @Override
@@ -40,11 +39,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         return department;
     }
 
-    @Override
-    public List<Department> getAll() throws RepositoryException {
-        String sql = "SELECT * FROM departments";
-        final List<Department> allDepartments = jdbcTemplate.getAll(sql, departmentRowMapper);
-        return allDepartments;
+    protected String getTableName(){
+        return "departments";
     }
 
 
