@@ -9,10 +9,11 @@ import com.aimprosoft.kmb.exceptions.ValidationException;
 
 import java.util.List;
 
-public class DepartmentService {
+public class DepartmentService  {
 
 
     private final DepartmentDao departmentDao = new DepartmentDaoJDBC();
+
 
     public void createDepartment(Department department) throws ServiceException {
         final boolean departmentExists = departmentDao.isExists(department);
@@ -22,6 +23,7 @@ public class DepartmentService {
             throw new ValidationException("Can`t create department, because this department name already used!");
         }
     }
+
 
     public Department getDepartmentById(long id) throws ServiceException {
         try {
@@ -40,14 +42,15 @@ public class DepartmentService {
         }
     }
 
+
     public Department updateDepartment(Department department) throws ServiceException {
         try {
-            final Department updatedDepartment = departmentDao.update(department);
-            return updatedDepartment;
+            return departmentDao.update(department);
         } catch (RepositoryException e) {
             throw new ServiceException("Can`t to update department");
         }
     }
+
 
     public void deleteDepartmentById(long id) throws ServiceException {
         try {

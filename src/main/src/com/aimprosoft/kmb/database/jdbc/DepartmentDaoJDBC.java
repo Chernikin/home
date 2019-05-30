@@ -2,26 +2,63 @@ package com.aimprosoft.kmb.database.jdbc;
 
 import com.aimprosoft.kmb.database.DepartmentDao;
 import com.aimprosoft.kmb.database.JdbcTemplate;
+import com.aimprosoft.kmb.database.QueryBuilderSql;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.rowMapper.DepartmentRowMapper;
+import com.aimprosoft.kmb.rowMapper.RowMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DepartmentDaoJDBC implements DepartmentDao {
+public class DepartmentDaoJDBC extends AbstractDaoJDBC<Department> implements DepartmentDao {
 
+
+    public static final String DEPARTMENT_PARAMS = "(department_name, comments) VALUES (?, ?)";
     private JdbcTemplate<Department> jdbcTemplate = new JdbcTemplate<>();
     private DepartmentRowMapper departmentRowMapper = new DepartmentRowMapper();
+    private QueryBuilderSql queryBuilderSql = new QueryBuilderSql();
 
     @Override
+    protected String getTableName() {
+        return "departments";
+    }
+
+    @Override
+    protected String getFieldName() {
+        return "department_name";
+    }
+
+
+    @Override
+    protected Object getField(Department department) {
+        return department.getDepartmentName();
+    }
+
+    @Override
+    protected RowMapper<Department> rowMapper() {
+        return departmentRowMapper;
+    }
+
+    @Override
+    public boolean isExists(Department department) throws RepositoryException {
+        return super.isExists(department);
+    }
+
+   /* @Override
     public boolean isExists(Department department) throws RepositoryException {
         String sql = "SELECT count(id) FROM departments WHERE department_name = ?";
         List<Object> params = new ArrayList<>();
         params.add(department.getDepartmentName());
         String log = "Can`t check the existence same name of the department";
         return jdbcTemplate.isExist(sql, params, log);
-    }
+    }*/
+
+    /*@Override
+    public void create(Department department) throws RepositoryException {
+        queryBuilderSql.setSqlParams(DEPARTMENT_PARAMS);
+        super.create(department);
+    }*/
 
     @Override
     public void create(Department department) throws RepositoryException {
@@ -31,6 +68,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         jdbcTemplate.create(sql, params, log);
     }
 
+
     @Override
     public Department getById(long id) throws RepositoryException {
 
@@ -38,11 +76,11 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         final Department department = jdbcTemplate.getById(sql, id, departmentRowMapper);
         return department;
     }
-
-    protected String getTableName(){
-        return "departments";
-    }
-
+/*
+    @Override
+    public List<Department> getAll() throws RepositoryException {
+        return super.getAll();
+    }*/
 
     @Override
     public Department update(Department department) throws RepositoryException {
@@ -54,14 +92,19 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         return updatedDepartment;
     }
 
-    @Override
+  /*  @Override
+    public void deleteById(long id) throws RepositoryException {
+        super.deleteById(id);
+    }*/
+
+   /* @Override
     public void deleteById(long id) throws RepositoryException {
         String sql = "DELETE FROM departments WHERE id = ?";
         jdbcTemplate.deleteById(sql, id);
-    }
+    }*/
 
-
-    private List<Object> getObjects(Department department) {
+    @Override
+    protected List<Object> getObjects(Department department) {
         List<Object> params = new ArrayList<>();
         params.add(department.getDepartmentName());
         params.add(department.getComments());

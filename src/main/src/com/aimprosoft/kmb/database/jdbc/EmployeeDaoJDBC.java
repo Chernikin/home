@@ -3,9 +3,11 @@ package com.aimprosoft.kmb.database.jdbc;
 import com.aimprosoft.kmb.database.DatabaseConnectionManager;
 import com.aimprosoft.kmb.database.EmployeeDao;
 import com.aimprosoft.kmb.database.JdbcTemplate;
+import com.aimprosoft.kmb.database.QueryBuilderSql;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.rowMapper.EmployeeRowMapper;
+import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -13,20 +15,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EmployeeDaoJDBC implements EmployeeDao {
+public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements EmployeeDao {
 
 
+    public static final String EMPLOYEE_PARAMS = "(first_name, last_name, email, age, phone_number, employment_date, department_id) VALUES (?,?,?,?,?,?,?)";
+    public static final String EMPLOYEE_UPDATE_PARAMS = "UPDATE employees SET first_name = ?, last_name = ?, email = ?, age = ?, phone_number = ?, employment_date = ?, department_id = ? WHERE id = ?";
     private JdbcTemplate<Employee> jdbcTemplate = new JdbcTemplate<>();
     private EmployeeRowMapper employeeRowMapper = new EmployeeRowMapper();
     private static Logger logger = Logger.getLogger(EmployeeDaoJDBC.class);
 
     @Override
+    protected String getTableName() {
+        return "employees";
+    }
+
+    @Override
+    protected String getFieldName() {
+        return "email";
+    }
+
+    @Override
+    protected Object getField(Employee employee) {
+        return employee.getEmail();
+    }
+
+    @Override
+    protected RowMapper<Employee> rowMapper() {
+        return employeeRowMapper;
+    }
+
+    private QueryBuilderSql queryBuilderSql = new QueryBuilderSql();
+
+
+    /*@Override
     public boolean isExists(Employee employee) throws RepositoryException {
         String sql = "SELECT count(id) FROM employees WHERE email = ?";
         List<Object> params = new ArrayList<>();
         params.add(employee.getEmail());
         String log = "Can`t check the existence same email of the employee";
         return jdbcTemplate.isExist(sql, params, log);
+    }
+*/
+  /*  @Override
+    public void create(Employee employee) throws RepositoryException {
+        queryBuilderSql.setSqlParams(EMPLOYEE_PARAMS);
+        super.create(employee);
+    }*/
+
+    @Override
+    public boolean isExists(Employee employee) throws RepositoryException {
+        return super.isExists(employee);
     }
 
     @Override
@@ -46,27 +84,44 @@ public class EmployeeDaoJDBC implements EmployeeDao {
 
     @Override
     public List<Employee> getAll() throws RepositoryException {
+        return super.getAll();
+    }
+
+    /* @Override
+    public List<Employee> getAll() throws RepositoryException {
         String sql = "SELECT * FROM employees";
         final List<Employee> allEmployees = jdbcTemplate.getAll(sql, employeeRowMapper);
         return allEmployees;
+    }*/
+
+
+   /* @Override
+    public Employee update(Employee employee) throws RepositoryException {
+        queryBuilderSql.setSqlParams(EMPLOYEE_UPDATE_PARAMS);
+       return null;
+    }*/
+
+    @Override
+    public Employee update(Employee employee) throws RepositoryException {
+        String sql = "UPDATE departments SET department_name = ?, comments = ? WHERE id = ?";
+        List<Object> params = getObjects(employee);
+        params.add(employee.getId());
+        String log = "Can`t to update department";
+        return jdbcTemplate.update(sql, params, log);
     }
 
 
     @Override
-    public Employee update(Employee employee) throws RepositoryException {
-        String sql = "UPDATE employees SET first_name = ?, last_name = ?, email = ?, age = ?, phone_number = ?, employment_date = ?, department_id = ? WHERE id = ?";
-        List<Object> params = getObjects(employee);
-        params.add(employee.getId());
-        String log = "Can`t to update employee";
-        final Employee updatedEmployee = jdbcTemplate.update(sql, params, log);
-        return updatedEmployee;
+    public void deleteById(long id) throws RepositoryException {
+        super.deleteById(id);
     }
 
+    /*
     @Override
     public void deleteById(long id) throws RepositoryException {
         String sql = "DELETE FROM employees WHERE id = ?";
         jdbcTemplate.deleteById(sql, id);
-    }
+    }*/
 
 
     @Override
@@ -98,7 +153,8 @@ public class EmployeeDaoJDBC implements EmployeeDao {
         }
     }
 
-    private List<Object> getObjects(Employee employee) {
+    @Override
+    protected List<Object> getObjects(Employee employee) {
         List<Object> params = new ArrayList<>();
         params.add(employee.getFirstName());
         params.add(employee.getLastName());

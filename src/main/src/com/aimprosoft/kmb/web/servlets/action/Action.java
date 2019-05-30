@@ -9,5 +9,5 @@ import java.io.IOException;
 
 public interface Action {
 
-    void handle(HttpServletRequest req, HttpServletResponse resp) throws ServiceException;
+    void handle(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException;
 }

@@ -28,9 +28,8 @@ public class EmployeeServiceTest {
         employee.setPhoneNumber("+380995695656");
         employee.setEmploymentDate(new Date(2000 - 5 - 12));
         employee.setDepartment(departmentById);
-        final long employeeId = employeeService.createEmployee(employee);
-        assertTrue(employeeId > 1);
-    }
+        employeeService.createEmployee(employee);
+            }
 
     @Ignore
     @Test

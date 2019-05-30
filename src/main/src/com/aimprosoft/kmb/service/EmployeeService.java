@@ -8,11 +8,12 @@ import com.aimprosoft.kmb.exceptions.ServiceException;
 
 import java.util.List;
 
-public class EmployeeService {
+public class EmployeeService  {
 
     private final EmployeeDao employeeDao = new EmployeeDaoJDBC();
 
-    public long createEmployee(Employee employee) throws ServiceException {
+
+    public void createEmployee(Employee employee) throws ServiceException {
         try {
             final boolean emailExists = employeeDao.isExists(employee);
             if (!emailExists) {
@@ -23,7 +24,6 @@ public class EmployeeService {
         } catch (RepositoryException e) {
             throw new ServiceException("Can`t create a new employee");
         }
-        return 0;
     }
 
 
@@ -50,6 +50,7 @@ public class EmployeeService {
             throw new ServiceException("Can`t getById all employees from department with id: " + id);
         }
     }
+
 
     public Employee updateEmployee(Employee employee) throws ServiceException {
         try {
