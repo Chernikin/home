@@ -6,6 +6,7 @@ import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.validator.DepartmentValidator;
 import com.aimprosoft.kmb.validator.ValidationResult;
 import com.aimprosoft.kmb.validator.Validator;
+import com.aimprosoft.kmb.web.servlets.action.Action;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,12 +17,12 @@ import java.io.IOException;
 
 
 @WebServlet("/create-department-action")
-public class CreateDepartmentActionServlet extends HttpServlet {
+public class CreateDepartmentActionServlet implements Action {
 
     private DepartmentService departmentService = new DepartmentService();
     private Validator<Department> validator = new DepartmentValidator();
 
-    @Override
+
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final Department department = getDepartment(req);
         final ValidationResult validationResult = validator.validate(department);
@@ -54,5 +55,10 @@ public class CreateDepartmentActionServlet extends HttpServlet {
         departmentService.createDepartment(department);
         req.setAttribute("successMessage", "Department successfully created!");
         resp.sendRedirect("manage-departments-page");
+    }
+
+    @Override
+    public void handle(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+
     }
 }

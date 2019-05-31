@@ -14,8 +14,6 @@ public interface GenericDao<T> {
 
     T update(T object) throws RepositoryException;
 
-    boolean isExists(T object) throws RepositoryException;
-
     void deleteById(long id) throws RepositoryException;
 
 }

@@ -54,8 +54,7 @@ public class EmployeeService  {
 
     public Employee updateEmployee(Employee employee) throws ServiceException {
         try {
-            final Employee updatedEmployee = employeeDao.update(employee);
-            return updatedEmployee;
+            return employeeDao.update(employee);
         } catch (RepositoryException e) {
             throw new ServiceException("Can`t to update employee");
         }

@@ -1,9 +1,12 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
+import com.aimprosoft.kmb.conroller.Controller;
+import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.validator.ValidationResult;
 import com.aimprosoft.kmb.web.servlets.action.Action;
+import com.aimprosoft.kmb.web.servlets.page.department.ManageDepartmentsPageServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,20 +18,54 @@ import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet("/*")
-public class CREATE extends HttpServlet {
+public class GeneralPage extends HttpServlet {
 
-    Map<String, Action> mapping = new HashMap<>();
+
+    private Map<String, Controller> uriMappings = new HashMap<>();
+
+
+    @Override
+    public void init() throws ServletException {
+        uriMappings.put("/manage-departments-page.jsp", new ManageDepartmentsPageServlet());
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        service(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        service(req, resp);
+    }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Action action = mapping.get(req.getRequestURI());
 
+
+        /*uriMappings.put("manage-departments-page", new ManageDepartmentsPageServlet());
+        uriMappings.put("Create department", new CreateDepartmentActionServlet());
+        */
+
+        final Controller controller = uriMappings.get(req.getRequestURI());
+
+        ModelAndView modelAndView = null;
         try {
-            action.handle(req, resp);
+            modelAndView = controller.processRequest(req, resp);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
+        assert modelAndView != null;
+        String pageName = modelAndView.getViewName();
+        final Map<String, Object> modelData = modelAndView.getModelData();
 
+        prepareRenderData(modelData, req);
+        req.getRequestDispatcher(pageName).forward(req, resp);
+
+    }
+
+    private void prepareRenderData(Map<String, Object> modelData, HttpServletRequest req) {
+        modelData.forEach((name, value) -> req.setAttribute(name, value));
 
     }
 
