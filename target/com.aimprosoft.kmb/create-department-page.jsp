@@ -13,7 +13,7 @@
     <title>Create Department Page</title>
 </head>
 <body>
-<form action="create-department-action" method="post">
+<form action="general-page" method="post">
     <table>
         <tr>
             <td>Department name</td>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td>
-                <input type="submit" name="submit" value="Create">
+                <input type="submit" name="add" value="Create">
             </td>
         </tr>
     </table>

@@ -6,7 +6,7 @@
   Time: 15:47
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page  errorPage="error.jsp" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page errorPage="error.jsp" contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Manage Departments Page</title>
@@ -22,6 +22,7 @@
         <tr>
             <td colspan="6">
                 <button><a href="create-department-page.jsp"><b>Create Department</b></a></button>
+               <%-- <input type="hidden" value="/add">--%>
             </td>
         </tr>
         <tr>

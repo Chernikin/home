@@ -10,11 +10,13 @@ public class ModelAndView {
 
     private Map<String, Object> modelData = new HashMap<>();
 
+    public ModelAndView(){}
+
     public ModelAndView(String viewName) {
         this.viewName = viewName;
     }
 
-    public void addMapping(String key, Object value) {
+    public void addModelData(String key, Object value) {
         modelData.put(key, value);
     }
 

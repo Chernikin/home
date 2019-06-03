@@ -1,23 +1,23 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
+import com.aimprosoft.kmb.conroller.Controller;
+import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.validator.DepartmentValidator;
 import com.aimprosoft.kmb.validator.ValidationResult;
 import com.aimprosoft.kmb.validator.Validator;
-import com.aimprosoft.kmb.web.servlets.action.Action;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
 @WebServlet("/create-department-action")
-public class CreateDepartmentActionServlet implements Action {
+public class CreateDepartmentActionServlet implements Controller {
 
     private DepartmentService departmentService = new DepartmentService();
     private Validator<Department> validator = new DepartmentValidator();
@@ -58,7 +58,7 @@ public class CreateDepartmentActionServlet implements Action {
     }
 
     @Override
-    public void handle(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
-
+    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+        return null;
     }
 }
