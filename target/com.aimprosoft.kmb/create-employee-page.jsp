@@ -12,7 +12,7 @@
     <title>Create Employee Page</title>
 </head>
 <body>
-<form action="create-employee-action" method="post">
+<form action="add-employee" method="post">
     <table>
         <tr>
             <td>First name</td>
@@ -47,13 +47,13 @@
         <tr>
             <td>Department id</td>
             <td>
-                <input disabled type="text" name="departmentId" value="${departmentId}">
+                <input disabled type="text" name="departmentId" value="<%= request.getParameter("departmentId")%>" <%--value="${departmentId}"--%>>
             </td>
         </tr>
         <tr>
             <td>
                 <button type="submit">Create</button>
-                <input type="hidden" value="${departmentId}" name="departmentId">
+                <input type="hidden" value="<%=request.getParameter("departmentId")%>" <%--value="${departmentId}"--%> name="departmentId">
             </td>
         </tr>
     </table>

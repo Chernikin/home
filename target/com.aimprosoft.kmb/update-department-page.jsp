@@ -13,7 +13,7 @@
 </head>
 <body>
 <h3>Updating department with id: ${department.id}</h3>
-<form action="update-department-action" method="get">
+<form action="update-department" method="get">
     <table>
         <tr>
             <td>Department name</td>

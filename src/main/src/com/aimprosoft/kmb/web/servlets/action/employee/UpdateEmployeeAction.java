@@ -1,5 +1,7 @@
 package com.aimprosoft.kmb.web.servlets.action.employee;
 
+import com.aimprosoft.kmb.conroller.Controller;
+import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
@@ -11,36 +13,35 @@ import com.aimprosoft.kmb.validator.Validator;
 import com.aimprosoft.kmb.web.servlets.EmployeeTemplate;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/update-employee-action")
-public class UpdateEmployeeActionServlet extends HttpServlet {
+public class UpdateEmployeeAction implements Controller {
 
     private EmployeeService employeeService = new EmployeeService();
     private DepartmentService departmentService = new DepartmentService();
     private EmployeeTemplate employeeTemplate = new EmployeeTemplate();
     private Validator<Employee> validator = new EmployeeValidator();
 
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        final Employee employee;
-        try {
-            employee = getEmployee(req, employeeId, departmentId);
-            final ValidationResult validationResult = validator.validate(employee);
-            if (validationResult.hasError()) {
-                processError(req, resp, employee, validationResult);
-                return;
-            }
-            updateEmployee(req, resp, employee, departmentId);
-        } catch (ServiceException e) {
-            throw new ServletException(e.getMessage());
+        final Employee employee = getEmployee(req, employeeId, departmentId);
+        final ValidationResult validationResult = validator.validate(employee);
+        if (validationResult.hasError()) {
+            //  processError(req, resp, employee, validationResult);
+            throw new ServiceException("" + validationResult.getErrorMessage());
         }
+        employeeService.updateEmployee(employee);
+
+
+        final ModelAndView modelAndView = new ModelAndView("/manage-employees");
+        modelAndView.addModelData("departmentId", departmentId);
+
+        return modelAndView;
     }
 
     private Employee getEmployee(HttpServletRequest req, long employeeId, long departmentId) throws ServiceException {
@@ -51,7 +52,7 @@ public class UpdateEmployeeActionServlet extends HttpServlet {
         employee.setDepartment(departmentById);
         return employee;
     }
-
+/*
     private void processError(HttpServletRequest req, HttpServletResponse resp, Employee employee, ValidationResult validationResult) throws ServletException, IOException {
         req.setAttribute("errors", validationResult.getErrorMessage());
         req.setAttribute("employee", employee);
@@ -62,6 +63,5 @@ public class UpdateEmployeeActionServlet extends HttpServlet {
         employeeService.updateEmployee(employee);
         req.setAttribute("successMessage", "Employee with id: " + employee.getId() + " updated!");
         resp.sendRedirect("manage-employees-page?departmentId=" + departmentId);
-    }
-
+    }*/
 }

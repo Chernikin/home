@@ -22,7 +22,6 @@
         <tr>
             <td colspan="6">
                 <button><a href="create-department-page.jsp"><b>Create Department</b></a></button>
-               <%-- <input type="hidden" value="/add">--%>
             </td>
         </tr>
         <tr>
@@ -45,13 +44,13 @@
                     </form>
                 </td>
                 <td>
-                    <form action="delete-department-action" method="get">
+                    <form action="delete-department" method="get">
                         <button type="submit">delete department</button>
                         <input type="hidden" value="${department.id}" name="departmentId">
                     </form>
                 </td>
                 <td>
-                    <form action="manage-employees-page" method="get">
+                    <form action="manage-employees" method="get">
                         <button type="submit">list employees</button>
                         <input type="hidden" value="${department.id}" name="departmentId">
                     </form>

@@ -20,7 +20,7 @@ public class EmployeeServiceTest {
         final EmployeeService employeeService = new EmployeeService();
         final Employee employee = new Employee();
         final DepartmentService departmentService = new DepartmentService();
-        final Department departmentById = departmentService.getDepartmentById(1);
+        final Department departmentById = departmentService.getDepartmentById(9);
         employee.setFirstName("TestNewItems firstname");
         employee.setLastName("TestNewItems lastname");
         employee.setEmail("Testemail@gmail.com");
@@ -54,7 +54,7 @@ public class EmployeeServiceTest {
     @Test
     public void returnNullIfEmployeeDeleteFromData() throws ServiceException {
         final EmployeeService employeeService = new EmployeeService();
-        employeeService.deleteEmployee(6);
+        employeeService.deleteEmployee(7);
     }
 
 }

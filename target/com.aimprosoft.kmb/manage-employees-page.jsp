@@ -18,24 +18,25 @@
         <tr>
             <td colspan="10" align="center"><b>All employees from department</b></td>
         </tr>
-        <tr>
-            <td colspan="10">
-                <button><a href="create-employee-page?departmentId=${departmentId}"><b>Create Employee</b></a></button>
-            </td>
-        </tr>
-        <tr>
-            <td><b>Id</b></td>
-            <td><b>First name</b></td>
-            <td><b>Last name</b></td>
-            <td><b>Email</b></td>
-            <td><b>Age</b></td>
-            <td><b>Phone number</b></td>
-            <td><b>Employment date</b></td>
-            <td><b>Department</b></td>
-            <td><b>Update</b></td>
-            <td><b>Delete</b></td>
-        </tr>
-        <c:forEach items="${allEmployeesFromDepartment}" var="employee">
+            <tr>
+                <td colspan="10">
+                        <button type="submit"><a href="create-employee-page.jsp?departmentId=${departmentId}">Create employee</a></button>
+                <%--    <button><a href="create-employee-page.jsp?departmentId=${employee.department.id}"><b>Create Employee</b></a></button>
+                --%></td>
+            </tr>
+            <tr>
+                <td><b>Id</b></td>
+                <td><b>First name</b></td>
+                <td><b>Last name</b></td>
+                <td><b>Email</b></td>
+                <td><b>Age</b></td>
+                <td><b>Phone number</b></td>
+                <td><b>Employment date</b></td>
+                <td><b>Department</b></td>
+                <td><b>Update</b></td>
+                <td><b>Delete</b></td>
+            </tr>
+             <c:forEach items="${allEmployeesFromDepartment}" var="employee">
             <tr>
                 <td>${employee.id}</td>
                 <td>${employee.firstName}</td>
@@ -53,7 +54,7 @@
                     </form>
                 </td>
                 <td>
-                    <form action="delete-employee-action" method="get">
+                    <form action="delete-employee" method="get">
                         <button type="submit">delete employee</button>
                         <input type="hidden" value="${employee.id}" name="employeeId">
                         <input type="hidden" value="${departmentId}" name="departmentId">

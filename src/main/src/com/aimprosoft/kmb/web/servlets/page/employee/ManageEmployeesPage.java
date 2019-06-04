@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class ManageEmployeesPageServlet implements Controller {
+public class ManageEmployeesPage implements Controller {
 
     private EmployeeService employeeService = new EmployeeService();
 
@@ -25,11 +25,10 @@ public class ManageEmployeesPageServlet implements Controller {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         final List<Employee> allEmployeesFromDepartment;
         allEmployeesFromDepartment = employeeService.getAllEmployeesFromDepartment(departmentId);
-        req.setAttribute("allEmployeesFromDepartment", allEmployeesFromDepartment);
+      /*  req.setAttribute("allEmployeesFromDepartment", allEmployeesFromDepartment);
         req.setAttribute("departmentId", departmentId);
-        //  req.getRequestDispatcher("manage-employees-page.jsp").forward(req, resp);
-        System.out.println("We HERE");
-        final ModelAndView modelAndView = new ModelAndView("/manage-employees-page.jsp");
+*/
+        final ModelAndView modelAndView = new ModelAndView("/manage-employees-page.jsp?departmentId=" + departmentId);
         modelAndView.addModelData("allEmployeesFromDepartment", allEmployeesFromDepartment);
         modelAndView.addModelData("departmentId", departmentId);
         return modelAndView;

@@ -13,7 +13,7 @@
 </head>
 <body>
 <h3>Updating employee with id: ${employee.id}</h3>
-<form action="update-employee-action" method="get">
+<form action="update-employee" method="get">
     <table>
         <tr>
             <td>First name</td>

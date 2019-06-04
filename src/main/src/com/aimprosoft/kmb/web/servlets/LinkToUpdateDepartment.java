@@ -1,5 +1,7 @@
 package com.aimprosoft.kmb.web.servlets;
 
+import com.aimprosoft.kmb.conroller.Controller;
+import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
@@ -12,21 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@WebServlet("/link-to-update-department")
-public class LinkToUpdateDepartmentServlet extends HttpServlet {
+public class LinkToUpdateDepartment implements Controller {
 
     private DepartmentService departmentService = new DepartmentService();
 
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         final Department departmentById;
-        try {
-            departmentById = departmentService.getDepartmentById(departmentId);
-            req.setAttribute("department", departmentById);
-        } catch (ServiceException e) {
-            throw new ServletException(e.getMessage());
-        }
-        req.getRequestDispatcher("update-department-page.jsp").forward(req, resp);
+        departmentById = departmentService.getDepartmentById(departmentId);
+
+        final ModelAndView modelAndView = new ModelAndView("/update-department-page.jsp");
+        modelAndView.addModelData("department", departmentById);
+        modelAndView.addModelData("departmentId", departmentId);
+        return modelAndView;
     }
 }

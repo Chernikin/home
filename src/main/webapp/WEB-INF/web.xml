@@ -7,7 +7,7 @@
 
     <display-name>Archetype Created Web Application</display-name>
     <welcome-file-list>
-        <welcome-file>general-page</welcome-file>
+        <welcome-file>general</welcome-file>
     </welcome-file-list>
 
     <error-page>
