@@ -1,7 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
 import com.aimprosoft.kmb.conroller.Controller;
-import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
@@ -20,21 +19,23 @@ public class CreateDepartmentAction implements Controller {
     private Validator<Department> validator = new DepartmentValidator();
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
 
         final Department department = getDepartment(req);
         final ValidationResult validationResult = validator.validate(department);
         if (validationResult.hasError()) {
-            //processError(req, resp, department, validationResult);
-            throw new ServiceException("" + validationResult.getErrorMessage());
+            req.setAttribute("errors", validationResult.getErrorMessage());
+            req.setAttribute("incorrectDepartmentData", department);
+            throw new ValidationException("error");
         }
         departmentService.createDepartment(department);
 
-        final ModelAndView modelAndView = new ModelAndView("/");
+
+      /*  final ModelAndView modelAndView = new ModelAndView("/");
         modelAndView.addModelData("incorrectDepartmentData", department);
         modelAndView.addModelData("errors", validationResult.getErrorMessage());
         modelAndView.addModelData("successMessage", "Department successfully created!");
-        return modelAndView;
+        return modelAndView;*/
     }
 
 
@@ -45,11 +46,11 @@ public class CreateDepartmentAction implements Controller {
         return department;
     }
 
-  /*  private void processError(HttpServletRequest req, HttpServletResponse resp, Department department, ValidationResult validationResult) throws ServletException, IOException {
+    private void processError(HttpServletRequest req, HttpServletResponse resp, Department department, ValidationResult validationResult) throws ServletException, IOException {
         req.setAttribute("errors", validationResult.getErrorMessage());
         req.setAttribute("incorrectDepartmentData", department);
         req.getRequestDispatcher("create-department-page.jsp").forward(req, resp);
-    }*/
+    }
 //    private void createDepartment(HttpServletRequest req, HttpServletResponse resp, Department department) throws IOException, ServiceException {
 //        departmentService.createDepartment(department);
 //        req.setAttribute("successMessage", "Department successfully created!");

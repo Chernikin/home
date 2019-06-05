@@ -9,5 +9,5 @@ import java.io.IOException;
 
 public interface Controller {
 
-    ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException;
+    void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException;
 }

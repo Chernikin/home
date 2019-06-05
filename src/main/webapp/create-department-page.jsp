@@ -32,6 +32,11 @@
                 <input type="submit" name="submit" value="Create">
             </td>
         </tr>
+        <tr>
+            <td>
+                <button type="button" name="back" onclick="history.back()"><b>back</b></button>
+            </td>
+        </tr>
     </table>
 </form>
 </body>

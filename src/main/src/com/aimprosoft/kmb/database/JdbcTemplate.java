@@ -34,6 +34,7 @@ public class JdbcTemplate<T> {
             }
         } catch (SQLException e) {
             logger.error("Can`t get by id: " + id, e);
+            throw new RepositoryException("Can`t get by id");
         } finally {
             try {
                 if (preparedStatement != null) {

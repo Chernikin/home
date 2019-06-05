@@ -9,11 +9,10 @@ import com.aimprosoft.kmb.exceptions.ValidationException;
 
 import java.util.List;
 
-public class DepartmentService  {
+public class DepartmentService {
 
 
     private final DepartmentDao departmentDao = new DepartmentDaoJDBC();
-
 
     public void createDepartment(Department department) throws ServiceException {
         final boolean departmentExists = departmentDao.isExists(department);

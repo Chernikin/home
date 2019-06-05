@@ -1,7 +1,6 @@
 package com.aimprosoft.kmb.web.servlets;
 
 import com.aimprosoft.kmb.conroller.Controller;
-import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
@@ -20,14 +19,17 @@ public class LinkToUpdateEmployee implements Controller {
     private DepartmentService departmentService = new DepartmentService();
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         Employee employeeById = employeeService.getEmployeeById(employeeId);
         final List<Department> allDepartments = departmentService.getAllDepartments();
+        req.setAttribute("employee", employeeById);
+        req.setAttribute("allDepartments", allDepartments);
 
-        final ModelAndView modelAndView = new ModelAndView("/update-employee-page.jsp");
+    /*    final ModelAndView modelAndView = new ModelAndView("/update-employee-page.jsp");
         modelAndView.addModelData("employee", employeeById);
         modelAndView.addModelData("allDepartments", allDepartments);
         return modelAndView;
+    */
     }
 }

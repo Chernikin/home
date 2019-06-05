@@ -32,7 +32,7 @@
         </tr>
         <tr>
             <td>Age</td>
-            <td><input type="text" name="age" value="${employee.age}"></td>
+            <td><input type="text" name="age" value="${employee.age}" maxlength="2" pattern="[1-9]" required></td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
@@ -59,6 +59,11 @@
             <td>
                 <button type="submit">Update</button>
                 <input type="hidden" name="employeeId" value="${employee.id}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" name="back" onclick="history.back()"><b>back</b></button>
             </td>
         </tr>
     </table>

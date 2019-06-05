@@ -31,7 +31,8 @@
         </tr>
         <tr>
             <td>Age</td>
-            <td><input value="${incorrectEmployeeData.age}" type="text" name="age"></td>
+            <td><input value="${incorrectEmployeeData.age}" type="text" name="age" maxlength="2" pattern="^[0-9]{1,2}"
+                       required></td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
@@ -47,13 +48,18 @@
         <tr>
             <td>Department id</td>
             <td>
-                <input disabled type="text" name="departmentId" value="<%= request.getParameter("departmentId")%>" <%--value="${departmentId}"--%>>
+                <input disabled type="text" name="departmentId" value="${departmentId}">
             </td>
         </tr>
         <tr>
             <td>
                 <button type="submit">Create</button>
-                <input type="hidden" value="<%=request.getParameter("departmentId")%>" <%--value="${departmentId}"--%> name="departmentId">
+                <input type="hidden" value="${departmentId}" name="departmentId">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" name="back" onclick="history.back()"><b>back</b></button>
             </td>
         </tr>
     </table>

@@ -31,6 +31,11 @@
                 <input type="hidden" name="departmentId" value="${department.id}">
             </td>
         </tr>
+        <tr>
+            <td>
+                <button type="button" name="back" onclick="history.back()"><b>back</b></button>
+            </td>
+        </tr>
     </table>
 </form>
 </body>

@@ -21,16 +21,19 @@ public class ManageEmployeesPage implements Controller {
     private EmployeeService employeeService = new EmployeeService();
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         final List<Employee> allEmployeesFromDepartment;
         allEmployeesFromDepartment = employeeService.getAllEmployeesFromDepartment(departmentId);
-      /*  req.setAttribute("allEmployeesFromDepartment", allEmployeesFromDepartment);
+        req.setAttribute("allEmployeesFromDepartment", allEmployeesFromDepartment);
         req.setAttribute("departmentId", departmentId);
-*/
+
+
+        /*
         final ModelAndView modelAndView = new ModelAndView("/manage-employees-page.jsp?departmentId=" + departmentId);
         modelAndView.addModelData("allEmployeesFromDepartment", allEmployeesFromDepartment);
         modelAndView.addModelData("departmentId", departmentId);
-        return modelAndView;
+        return modelAndView;*/
     }
 }

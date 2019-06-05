@@ -4,6 +4,7 @@ import com.aimprosoft.kmb.conroller.Controller;
 import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.validator.DepartmentValidator;
 import com.aimprosoft.kmb.validator.ValidationResult;
@@ -22,19 +23,23 @@ public class UpdateDepartmentAction implements Controller {
     private Validator<Department> validator = new DepartmentValidator();
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         final Department department;
         department = getDepartment(req, departmentId);
         final ValidationResult validationResult = validator.validate(department);
         if (validationResult.hasError()) {
             /*processError(req, resp, department, validationResult);*/
-            throw new ServiceException("" + validationResult.getErrorMessage());
+            req.setAttribute("errors", validationResult.getErrorMessage());
+            req.setAttribute("department", department);
+            throw new ValidationException("error");
         }
-        departmentService.updateDepartment(department);
 
+        departmentService.updateDepartment(department);
+/*
         final ModelAndView modelAndView = new ModelAndView("/");
         return modelAndView;
+    */
     }
 
 

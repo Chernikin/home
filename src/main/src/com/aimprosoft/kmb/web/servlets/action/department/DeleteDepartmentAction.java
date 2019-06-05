@@ -1,9 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
 import com.aimprosoft.kmb.conroller.Controller;
-import com.aimprosoft.kmb.conroller.ModelAndView;
-import com.aimprosoft.kmb.domain.Department;
-import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.service.EmployeeService;
@@ -12,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 public class DeleteDepartmentAction implements Controller {
 
@@ -20,17 +16,16 @@ public class DeleteDepartmentAction implements Controller {
     private EmployeeService employeeService = new EmployeeService();
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
 
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
+        employeeService.deleteAllFromDepartment(departmentId);
         departmentService.deleteDepartmentById(departmentId);
-        final List<Employee> allEmployeesFromDepartment = employeeService.getAllEmployeesFromDepartment(departmentId);
-        for (Employee i : allEmployeesFromDepartment) {
-            employeeService.deleteEmployee(i.getId());
-        }
 
-        final ModelAndView modelAndView = new ModelAndView("/");
+    /*    final ModelAndView modelAndView = new ModelAndView("/");
         modelAndView.addModelData("successMessage", "Department with id: " + departmentId + " deleted!");
         return modelAndView;
+    */
     }
 }
+

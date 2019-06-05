@@ -5,6 +5,7 @@ import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.service.EmployeeService;
 import com.aimprosoft.kmb.validator.EmployeeValidator;
@@ -26,22 +27,25 @@ public class UpdateEmployeeAction implements Controller {
 
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         final Employee employee = getEmployee(req, employeeId, departmentId);
         final ValidationResult validationResult = validator.validate(employee);
         if (validationResult.hasError()) {
             //  processError(req, resp, employee, validationResult);
-            throw new ServiceException("" + validationResult.getErrorMessage());
+            req.setAttribute("errors", validationResult.getErrorMessage());
+            req.setAttribute("employee", employee);
+            throw new ValidationException("error");
         }
+        req.setAttribute("departmentId", departmentId);
         employeeService.updateEmployee(employee);
 
 
-        final ModelAndView modelAndView = new ModelAndView("/manage-employees");
+        /*final ModelAndView modelAndView = new ModelAndView("/manage-employees");
         modelAndView.addModelData("departmentId", departmentId);
-
-        return modelAndView;
+         return modelAndView;
+    */
     }
 
     private Employee getEmployee(HttpServletRequest req, long employeeId, long departmentId) throws ServiceException {

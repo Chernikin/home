@@ -12,15 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-public class CreateEmployeePageServlet implements Controller {
+public class LinkToCreateEmployee implements Controller {
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
+        req.setAttribute("departmentId", departmentId);
 
-        final ModelAndView modelAndView = new ModelAndView("/create-employee-page.jsp");
+
+        /*final ModelAndView modelAndView = new ModelAndView("/create-employee-page.jsp");
         modelAndView.addModelData("departmentId", departmentId);
-        return modelAndView;
+        return modelAndView;*/
 
         /*  req.getRequestDispatcher("create-employee-page.jsp").forward(req, resp);*/
     }

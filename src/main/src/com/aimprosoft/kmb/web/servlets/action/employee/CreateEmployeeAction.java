@@ -5,6 +5,7 @@ import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.service.EmployeeService;
 import com.aimprosoft.kmb.validator.EmployeeValidator;
@@ -26,7 +27,7 @@ public class CreateEmployeeAction implements Controller {
     private Validator<Employee> validator = new EmployeeValidator();
 
     @Override
-    public ModelAndView processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final Employee employee = getEmployee(req);
 
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
@@ -34,20 +35,23 @@ public class CreateEmployeeAction implements Controller {
         employee.setDepartment(department);
         final ValidationResult validationResult = validator.validate(employee);
         if (validationResult.hasError()) {
-            //processError(req, resp, employee, validationResult);
-            throw new ServiceException("" + validationResult.getErrorMessage());
+            req.setAttribute("errors", validationResult.getErrorMessage());
+            req.setAttribute("incorrectEmployeeData", employee);
+            req.setAttribute("departmentId", departmentId);
+            throw new ValidationException("error" + validationResult.getErrorMessage());
         }
 
+        req.setAttribute("departmentId", departmentId);
         employeeService.createEmployee(employee);
 
-        final ModelAndView modelAndView = new ModelAndView("/manage-employees");
+       /* final ModelAndView modelAndView = new ModelAndView("/manage-employees");
         modelAndView.addModelData("departmentId", departmentId);
         modelAndView.addModelData("incorrectEmployeeData", employee);
-        return modelAndView;
+        return modelAndView;*/
 
     }
 
-    private Employee getEmployee(HttpServletRequest req) {
+    private Employee getEmployee(HttpServletRequest req){
         final Employee employeeNew = new Employee();
         return employeeTemplate.extractEmployeeFromRequest(req, employeeNew);
     }

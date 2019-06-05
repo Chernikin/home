@@ -14,6 +14,11 @@
 
 <h3>Sorry, an error is happened!</h3>
 <div>Error: <%=exception.getMessage()%>
+    <tr>
+        <td>
+            <button type="button" name="back" onclick="history.back()"><b>back</b></button>
+        </td>
+    </tr>
 </div>
 </body>
 </html>

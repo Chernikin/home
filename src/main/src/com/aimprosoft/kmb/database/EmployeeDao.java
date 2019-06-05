@@ -10,4 +10,6 @@ public interface EmployeeDao extends GenericDao<Employee> {
     List<Employee> getAllFromDepartment(long id) throws RepositoryException;
 
     boolean isExists(Employee employee) throws RepositoryException;
+
+    void deleteAllFromDepartment(long id) throws RepositoryException;
 }

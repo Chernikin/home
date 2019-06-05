@@ -9,6 +9,7 @@ import com.aimprosoft.kmb.rowMapper.EmployeeRowMapper;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
 
+import javax.servlet.annotation.WebServlet;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,16 +53,6 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
         return employeeRowMapper;
     }
 
-
-    @Override
-    public boolean isExists(Employee employee) throws RepositoryException {
-        String sql = "SELECT count(id) FROM employees WHERE email = ?";
-        List<Object> params = new ArrayList<>();
-        params.add(employee.getEmail());
-        String log = "Can`t check the existence same email of the employee";
-        return jdbcTemplate.isExist(sql, params, log);
-    }
-
     @Override
     public List<Employee> getAllFromDepartment(long id) throws RepositoryException {
         Connection connection = DatabaseConnectionManager.getConnection();
@@ -89,6 +80,40 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
             }
             DatabaseConnectionManager.closeConnection(connection);
         }
+    }
+
+    @Override
+    public void deleteAllFromDepartment(long id) throws RepositoryException {
+        Connection connection = DatabaseConnectionManager.getConnection();
+        String sql = "DELETE FROM employees WHERE department_id = ?";
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+            DatabaseConnectionManager.commit(connection);
+        } catch (SQLException e) {
+            logger.error("Can`t delete", e);
+            DatabaseConnectionManager.rollback(connection);
+            throw new RepositoryException("Can`t delete");
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            DatabaseConnectionManager.closeConnection(connection);
+        }
+    }
+
+
+    @Override
+    public boolean isExists(Employee employee) throws RepositoryException {
+        String sql = "SELECT count(id) FROM employees WHERE email = ?";
+        List<Object> params = new ArrayList<>();
+        params.add(employee.getEmail());
+        String log = "Can`t check the existence same email of the employee";
+        return jdbcTemplate.isExist(sql, params, log);
     }
 
     @Override

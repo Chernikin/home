@@ -13,12 +13,12 @@ public class EmployeeTemplate {
         employee.setFirstName(req.getParameter("firstName"));
         employee.setLastName(req.getParameter("lastName"));
         employee.setEmail(req.getParameter("email"));
-        employee.setAge(Integer.parseInt(req.getParameter("age")));
         employee.setPhoneNumber(req.getParameter("phoneNumber"));
+        employee.setAge(Integer.parseInt(req.getParameter("age")));
         try {
             employee.setEmploymentDate(simpleDateFormat.parse(req.getParameter("employmentDate")));
         } catch (ParseException e) {
-            throw new RuntimeException();
+            System.out.println("Can`t parse date");
         }
         return employee;
     }
