@@ -9,7 +9,6 @@ import com.aimprosoft.kmb.rowMapper.EmployeeRowMapper;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
 
-import javax.servlet.annotation.WebServlet;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +71,10 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
             throw new RepositoryException("Can`t get all employees");
         } finally {
             try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
+                assert preparedStatement != null;
+                preparedStatement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Can`t closed statement.");
             }
             DatabaseConnectionManager.closeConnection(connection);
         }
@@ -98,9 +96,10 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
             throw new RepositoryException("Can`t delete");
         } finally {
             try {
+                assert preparedStatement != null;
                 preparedStatement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Can`t closed statement.");
             }
             DatabaseConnectionManager.closeConnection(connection);
         }

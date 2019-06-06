@@ -1,11 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
-import com.aimprosoft.kmb.conroller.ModelAndView;
-import com.aimprosoft.kmb.database.JdbcTemplate;
 import com.aimprosoft.kmb.exceptions.ServiceException;
-import com.aimprosoft.kmb.exceptions.ValidationException;
-import com.aimprosoft.kmb.validator.ValidationResult;
-import com.aimprosoft.kmb.validator.Validator;
 import com.aimprosoft.kmb.web.servlets.LinkToUpdateDepartment;
 import com.aimprosoft.kmb.web.servlets.LinkToUpdateEmployee;
 import com.aimprosoft.kmb.web.servlets.action.PageMapping;
@@ -55,16 +50,13 @@ public class GeneralPage extends HttpServlet {
 
 
         final PageMapping mapping = uriMappings.get(req.getRequestURI());
-
         //ModelAndView modelAndView = null;
 
         try {
             mapping.getController().processRequest(req, resp);
             req.getRequestDispatcher(mapping.getJsp()).forward(req, resp);
-        } /*catch (ValidationException e) {
-            throw new ServletException(e.getMessage());
-        }*/ catch (ServiceException e) {
-            logger.error("validation exception");
+        } catch (ServiceException e) {
+            logger.error("Data is not valid!");
             req.getRequestDispatcher(mapping.getRedirect()).forward(req, resp);
         }
 

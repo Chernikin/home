@@ -21,8 +21,8 @@ public class LinkToUpdateEmployee implements Controller {
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
-        Employee employeeById = employeeService.getEmployeeById(employeeId);
-        final List<Department> allDepartments = departmentService.getAllDepartments();
+        Employee employeeById = employeeService.getById(employeeId);
+        final List<Department> allDepartments = departmentService.getAll();
         req.setAttribute("employee", employeeById);
         req.setAttribute("allDepartments", allDepartments);
 

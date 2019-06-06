@@ -1,7 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
 import com.aimprosoft.kmb.conroller.Controller;
-import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
@@ -11,8 +10,6 @@ import com.aimprosoft.kmb.validator.ValidationResult;
 import com.aimprosoft.kmb.validator.Validator;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,7 +32,7 @@ public class UpdateDepartmentAction implements Controller {
             throw new ValidationException("error");
         }
 
-        departmentService.updateDepartment(department);
+        departmentService.update(department);
 /*
         final ModelAndView modelAndView = new ModelAndView("/");
         return modelAndView;
@@ -44,7 +41,7 @@ public class UpdateDepartmentAction implements Controller {
 
 
     private Department getDepartment(HttpServletRequest req, long departmentId) throws ServiceException {
-        final Department departmentById = departmentService.getDepartmentById(departmentId);
+        final Department departmentById = departmentService.getById(departmentId);
         departmentById.setDepartmentName(req.getParameter("departmentName"));
         departmentById.setComments(req.getParameter("comments"));
         return departmentById;
@@ -56,8 +53,8 @@ public class UpdateDepartmentAction implements Controller {
         req.getRequestDispatcher("update-department-page.jsp").forward(req, resp);
     }
 
-    private void updateDepartment(HttpServletRequest req, HttpServletResponse resp, long departmentId, Department department) throws IOException, ServiceException {
-        departmentService.updateDepartment(department);
+    private void update(HttpServletRequest req, HttpServletResponse resp, long departmentId, Department department) throws IOException, ServiceException {
+        departmentService.update(department);
         req.setAttribute("successMessage", "Department with id: " + departmentId + " updated!");
         resp.sendRedirect("manage-departments-page");
     }*/

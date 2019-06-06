@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -32,7 +33,7 @@
         </tr>
         <tr>
             <td>Age</td>
-            <td><input type="text" name="age" value="${employee.age}" maxlength="2" pattern="[1-9]" required></td>
+            <td><input type="text" name="age" value="${employee.age}" maxlength="2" pattern="^[0-9]{1,2}" required></td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
@@ -42,7 +43,8 @@
         </tr>
         <tr>
             <td>Employment date</td>
-            <td><input type="date" name="employmentDate" value="${employee.employmentDate}"></td>
+            <td><input type="date" name="employmentDate"
+                       value="<fmt:formatDate value="${employee.employmentDate}" pattern="yyyy-MM-dd"/>" required></td>
             <td><c:out value="${errors.employmentDate}"> </c:out></td>
         </tr>
         <tr>

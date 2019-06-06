@@ -16,16 +16,16 @@ public class DepartmentServiceTest {
         final Department department = new Department();
         department.setDepartmentName("TestNewItems name");
         department.setComments("TestNewItems comments");
-        departmentService.createDepartment(department);
+        departmentService.create(department);
     }
 
     @Ignore
     @Test
     public void returnDepartmentIfDepartmentUpdated() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
-        final Department departmentById = departmentService.getDepartmentById(3);
+        final Department departmentById = departmentService.getById(3);
         departmentById.setDepartmentName("NEW TEST NAME");
-        final Department department = departmentService.updateDepartment(departmentById);
+        final Department department = departmentService.update(departmentById);
         assertNotNull(department);
     }
 
@@ -33,7 +33,7 @@ public class DepartmentServiceTest {
     @Test
     public void returnNullIfDepartmentDeleteFromData() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
-        departmentService.deleteDepartmentById(3);
+        departmentService.deleteById(3);
     }
 
 

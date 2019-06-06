@@ -1,7 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.employee;
 
 import com.aimprosoft.kmb.conroller.Controller;
-import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
@@ -17,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class UpdateEmployeeAction implements Controller {
 
@@ -31,15 +31,16 @@ public class UpdateEmployeeAction implements Controller {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         final Employee employee = getEmployee(req, employeeId, departmentId);
+        final List<Department> allDepartments = departmentService.getAll();
         final ValidationResult validationResult = validator.validate(employee);
         if (validationResult.hasError()) {
-            //  processError(req, resp, employee, validationResult);
             req.setAttribute("errors", validationResult.getErrorMessage());
             req.setAttribute("employee", employee);
+            req.setAttribute("allDepartments", allDepartments);
             throw new ValidationException("error");
         }
         req.setAttribute("departmentId", departmentId);
-        employeeService.updateEmployee(employee);
+        employeeService.update(employee);
 
 
         /*final ModelAndView modelAndView = new ModelAndView("/manage-employees");
@@ -50,8 +51,8 @@ public class UpdateEmployeeAction implements Controller {
 
     private Employee getEmployee(HttpServletRequest req, long employeeId, long departmentId) throws ServiceException {
         Department departmentById;
-        departmentById = departmentService.getDepartmentById(departmentId);
-        final Employee employeeById = employeeService.getEmployeeById(employeeId);
+        departmentById = departmentService.getById(departmentId);
+        final Employee employeeById = employeeService.getById(employeeId);
         final Employee employee = employeeTemplate.extractEmployeeFromRequest(req, employeeById);
         employee.setDepartment(departmentById);
         return employee;
@@ -63,8 +64,8 @@ public class UpdateEmployeeAction implements Controller {
         req.getRequestDispatcher("update-employee-page.jsp").forward(req, resp);
     }
 
-    private void updateEmployee(HttpServletRequest req, HttpServletResponse resp, Employee employee, long departmentId) throws ServiceException, IOException {
-        employeeService.updateEmployee(employee);
+    private void update(HttpServletRequest req, HttpServletResponse resp, Employee employee, long departmentId) throws ServiceException, IOException {
+        employeeService.update(employee);
         req.setAttribute("successMessage", "Employee with id: " + employee.getId() + " updated!");
         resp.sendRedirect("manage-employees-page?departmentId=" + departmentId);
     }*/

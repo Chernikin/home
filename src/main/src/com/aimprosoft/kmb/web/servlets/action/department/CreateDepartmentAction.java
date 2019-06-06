@@ -28,7 +28,7 @@ public class CreateDepartmentAction implements Controller {
             req.setAttribute("incorrectDepartmentData", department);
             throw new ValidationException("error");
         }
-        departmentService.createDepartment(department);
+        departmentService.create(department);
 
 
       /*  final ModelAndView modelAndView = new ModelAndView("/");
@@ -51,8 +51,8 @@ public class CreateDepartmentAction implements Controller {
         req.setAttribute("incorrectDepartmentData", department);
         req.getRequestDispatcher("create-department-page.jsp").forward(req, resp);
     }
-//    private void createDepartment(HttpServletRequest req, HttpServletResponse resp, Department department) throws IOException, ServiceException {
-//        departmentService.createDepartment(department);
+//    private void create(HttpServletRequest req, HttpServletResponse resp, Department department) throws IOException, ServiceException {
+//        departmentService.create(department);
 //        req.setAttribute("successMessage", "Department successfully created!");
 //        resp.sendRedirect("manage-departments-page");
 //    }

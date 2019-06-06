@@ -3,18 +3,19 @@ package com.aimprosoft.kmb.service;
 import com.aimprosoft.kmb.database.DepartmentDao;
 import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJDBC;
 import com.aimprosoft.kmb.domain.Department;
-import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
 
 import java.util.List;
 
-public class DepartmentService {
+public class DepartmentService implements GenericService<Department> {
 
 
     private final DepartmentDao departmentDao = new DepartmentDaoJDBC();
 
-    public void createDepartment(Department department) throws ServiceException {
+
+    @Override
+    public void create(Department department) throws ServiceException {
         final boolean departmentExists = departmentDao.isExists(department);
         if (!departmentExists) {
             departmentDao.create(department);
@@ -24,39 +25,24 @@ public class DepartmentService {
     }
 
 
-    public Department getDepartmentById(long id) throws ServiceException {
-        try {
-            return departmentDao.getById(id);
-        } catch (RepositoryException e) {
-            throw new ServiceException("Can`t getById the department by id: " + id);
-        }
+    @Override
+    public Department getById(long id) throws ServiceException {
+        return departmentDao.getById(id);
     }
 
-
-    public List<Department> getAllDepartments() throws ServiceException {
-        try {
-            return departmentDao.getAll();
-        } catch (RepositoryException e) {
-            throw new ServiceException("Can`t getById all the departments");
-        }
+    @Override
+    public List<Department> getAll() throws ServiceException {
+        return departmentDao.getAll();
     }
 
-
-    public Department updateDepartment(Department department) throws ServiceException {
-        try {
-            return departmentDao.update(department);
-        } catch (RepositoryException e) {
-            throw new ServiceException("Can`t to update department");
-        }
+    @Override
+    public Department update(Department department) throws ServiceException {
+        return departmentDao.update(department);
     }
 
-
-    public void deleteDepartmentById(long id) throws ServiceException {
-        try {
-            departmentDao.deleteById(id);
-        } catch (RepositoryException e) {
-            throw new ServiceException("Can`t delete department by id: " + id);
-        }
+    @Override
+    public void deleteById(long id) throws ServiceException {
+        departmentDao.deleteById(id);
     }
 
 }

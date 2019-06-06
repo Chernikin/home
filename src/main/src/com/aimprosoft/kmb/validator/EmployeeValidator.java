@@ -4,6 +4,8 @@ import com.aimprosoft.kmb.database.EmployeeDao;
 import com.aimprosoft.kmb.database.jdbc.EmployeeDaoJDBC;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.web.servlets.action.department.GeneralPage;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
 
@@ -16,6 +18,8 @@ public class EmployeeValidator implements Validator<Employee> {
     private static final int MAX_PHONE_NUMBER_LENGTH = 13;
     private static final int DEP_NOT_VALID_NUMBER = 0;
     private EmployeeDao employeeDao = new EmployeeDaoJDBC();
+    private static Logger logger = Logger.getLogger(EmployeeValidator.class);
+
 
     @Override
     public ValidationResult validate(Employee employee) {
@@ -66,7 +70,7 @@ public class EmployeeValidator implements Validator<Employee> {
         try {
             return !employeeDao.isExists(employee);
         } catch (RepositoryException e) {
-            e.printStackTrace();
+        logger.error("Can`t check email on exist!");
         }
         return false;
     }

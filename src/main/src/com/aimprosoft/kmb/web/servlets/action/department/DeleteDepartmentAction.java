@@ -20,7 +20,7 @@ public class DeleteDepartmentAction implements Controller {
 
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         employeeService.deleteAllFromDepartment(departmentId);
-        departmentService.deleteDepartmentById(departmentId);
+        departmentService.deleteById(departmentId);
 
     /*    final ModelAndView modelAndView = new ModelAndView("/");
         modelAndView.addModelData("successMessage", "Department with id: " + departmentId + " deleted!");

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -42,15 +43,17 @@
         </tr>
         <tr>
             <td>Employment date</td>
-            <td><input value="${incorrectEmployeeData.employmentDate}" type="date" name="employmentDate"></td>
+            <td><input type="date" name="employmentDate"
+                       value="<fmt:formatDate value="${incorrectEmployeeData.employmentDate}" pattern="yyyy-MM-dd"/>"
+                       required></td>
             <td><c:out value="${errors.employmentDate}"> </c:out></td>
         </tr>
-        <tr>
+        <%--<tr>
             <td>Department id</td>
             <td>
                 <input disabled type="text" name="departmentId" value="${departmentId}">
             </td>
-        </tr>
+        </tr>--%>
         <tr>
             <td>
                 <button type="submit">Create</button>

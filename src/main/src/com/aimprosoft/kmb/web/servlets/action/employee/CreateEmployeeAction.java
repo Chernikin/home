@@ -1,7 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.employee;
 
 import com.aimprosoft.kmb.conroller.Controller;
-import com.aimprosoft.kmb.conroller.ModelAndView;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
@@ -31,7 +30,7 @@ public class CreateEmployeeAction implements Controller {
         final Employee employee = getEmployee(req);
 
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        Department department = departmentService.getDepartmentById(departmentId);
+        Department department = departmentService.getById(departmentId);
         employee.setDepartment(department);
         final ValidationResult validationResult = validator.validate(employee);
         if (validationResult.hasError()) {
@@ -42,7 +41,7 @@ public class CreateEmployeeAction implements Controller {
         }
 
         req.setAttribute("departmentId", departmentId);
-        employeeService.createEmployee(employee);
+        employeeService.create(employee);
 
        /* final ModelAndView modelAndView = new ModelAndView("/manage-employees");
         modelAndView.addModelData("departmentId", departmentId);
@@ -51,7 +50,7 @@ public class CreateEmployeeAction implements Controller {
 
     }
 
-    private Employee getEmployee(HttpServletRequest req){
+    private Employee getEmployee(HttpServletRequest req) {
         final Employee employeeNew = new Employee();
         return employeeTemplate.extractEmployeeFromRequest(req, employeeNew);
     }
@@ -64,16 +63,16 @@ public class CreateEmployeeAction implements Controller {
         req.getRequestDispatcher("create-employee-page.jsp").forward(req, resp);
     }
 
-    private void createEmployee(HttpServletRequest req, HttpServletResponse resp, Employee employee) throws IOException, ServiceException {
+    private void create(HttpServletRequest req, HttpServletResponse resp, Employee employee) throws IOException, ServiceException {
         final Department department;
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         try {
-            department = departmentService.getDepartmentById(departmentId);
+            department = departmentService.getById(departmentId);
             employee.setDepartment(department);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        employeeService.createEmployee(employee);
+        employeeService.create(employee);
         req.setAttribute("successMessage", "Employee successfully created!");
         resp.sendRedirect("manage-employees-page?departmentId=" + departmentId);
     }*/

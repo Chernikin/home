@@ -20,7 +20,7 @@ public class EmployeeServiceTest {
         final EmployeeService employeeService = new EmployeeService();
         final Employee employee = new Employee();
         final DepartmentService departmentService = new DepartmentService();
-        final Department departmentById = departmentService.getDepartmentById(9);
+        final Department departmentById = departmentService.getById(9);
         employee.setFirstName("TestNewItems firstname");
         employee.setLastName("TestNewItems lastname");
         employee.setEmail("Testemail@gmail.com");
@@ -28,7 +28,7 @@ public class EmployeeServiceTest {
         employee.setPhoneNumber("+380995695656");
         employee.setEmploymentDate(new Date(2000 - 5 - 12));
         employee.setDepartment(departmentById);
-        employeeService.createEmployee(employee);
+        employeeService.create(employee);
             }
 
     @Ignore
@@ -36,9 +36,9 @@ public class EmployeeServiceTest {
     public void returnEmployeeIfEmployeeUpdated() throws ServiceException {
 
         final EmployeeService employeeService = new EmployeeService();
-        final Employee employeeById = employeeService.getEmployeeById(6);
+        final Employee employeeById = employeeService.getById(6);
         final DepartmentService departmentService = new DepartmentService();
-        final Department departmentById = departmentService.getDepartmentById(1);
+        final Department departmentById = departmentService.getById(1);
         employeeById.setFirstName("NEW NEW UPDATED");
         employeeById.setLastName("TestNewItems lastname");
         employeeById.setEmail("Testemail@gmail.com");
@@ -46,7 +46,7 @@ public class EmployeeServiceTest {
         employeeById.setPhoneNumber("+380995695656");
         employeeById.setEmploymentDate(new Date(2010 - 6 - 20));
         employeeById.setDepartment(departmentById);
-        final Employee employee = employeeService.updateEmployee(employeeById);
+        final Employee employee = employeeService.update(employeeById);
         assertNotNull(employee);
     }
 
@@ -54,7 +54,7 @@ public class EmployeeServiceTest {
     @Test
     public void returnNullIfEmployeeDeleteFromData() throws ServiceException {
         final EmployeeService employeeService = new EmployeeService();
-        employeeService.deleteEmployee(7);
+        employeeService.deleteById(7);
     }
 
 }

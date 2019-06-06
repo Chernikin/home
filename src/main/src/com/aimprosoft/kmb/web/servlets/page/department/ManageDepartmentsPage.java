@@ -19,7 +19,7 @@ public class ManageDepartmentsPage implements Controller {
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
 
         final List<Department> allDepartments;
-        allDepartments = departmentService.getAllDepartments();
+        allDepartments = departmentService.getAll();
         req.setAttribute("allDepartments", allDepartments);
 
     /*    final ModelAndView modelAndView = new ModelAndView("/manage-departments-page.jsp");
