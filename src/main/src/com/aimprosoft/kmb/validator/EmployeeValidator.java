@@ -37,7 +37,7 @@ public class EmployeeValidator implements Validator<Employee> {
             validationResult.addErrorMessage("email", "E-mail is not valid. This e-mail is already used!");
         }
         if (!validateAge(employee)) {
-            validationResult.addErrorMessage("age", "Age is not valid. Age cannot be more than 99 years old.");
+            validationResult.addErrorMessage("age", "Age is not valid. Age cannot be less than 18 and more than 99 years old.");
         }
         if (!validatePhoneNumber(employee)) {
             validationResult.addErrorMessage("phoneNumber", "Phone number is not valid. Phone number cannot be more than 13 digits.");
@@ -70,14 +70,14 @@ public class EmployeeValidator implements Validator<Employee> {
         try {
             return !employeeDao.isExists(employee);
         } catch (RepositoryException e) {
-        logger.error("Can`t check email on exist!");
+            logger.error("Can`t check email on exist!");
         }
         return false;
     }
 
     private boolean validateAge(Employee employee) {
         final int age = employee.getAge();
-        return age <= MAX_AGE;
+        return age >= 18 && age <= MAX_AGE;
     }
 
     private boolean validatePhoneNumber(Employee employee) {

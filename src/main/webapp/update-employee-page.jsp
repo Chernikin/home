@@ -33,7 +33,7 @@
         </tr>
         <tr>
             <td>Age</td>
-            <td><input type="text" name="age" value="${employee.age}" maxlength="2" pattern="^[0-9]{1,2}" required></td>
+            <td><input type="text" name="age" value="${employee.age}" maxlength="2" pattern="^[0-9]{1,2}"></td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
@@ -44,7 +44,7 @@
         <tr>
             <td>Employment date</td>
             <td><input type="date" name="employmentDate"
-                       value="<fmt:formatDate value="${employee.employmentDate}" pattern="yyyy-MM-dd"/>" required></td>
+                       value="<fmt:formatDate value="${employee.employmentDate}" pattern="yyyy-MM-dd"/>"></td>
             <td><c:out value="${errors.employmentDate}"> </c:out></td>
         </tr>
         <tr>

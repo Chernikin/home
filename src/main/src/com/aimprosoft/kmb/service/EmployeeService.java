@@ -5,12 +5,14 @@ import com.aimprosoft.kmb.database.jdbc.EmployeeDaoJDBC;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
+import com.aimprosoft.kmb.validator.ValidationResult;
 
 import java.util.List;
 
 public class EmployeeService implements GenericService<Employee> {
 
     private final EmployeeDao employeeDao = new EmployeeDaoJDBC();
+
 
     @Override
     public void create(Employee employee) throws ServiceException {
