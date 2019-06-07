@@ -14,7 +14,7 @@
 </head>
 <body>
 <h3>Updating employee with id: ${employee.id}</h3>
-<form action="update-employee" method="get">
+<form action="update-employee" method="post">
     <table>
         <tr>
             <td>First name</td>
@@ -26,11 +26,11 @@
             <td><input type="text" name="lastName" value="${employee.lastName}"></td>
             <td><c:out value="${errors.lastName}"> </c:out></td>
         </tr>
-        <%--<tr>
+        <tr>
             <td>Email</td>
-            <td><input type="text" name="email"&lt;%&ndash; value="${employee.email}"&ndash;%&gt;></td>
+            <td><input type="text" name="email" value="${employee.email}"></td>
             <td><c:out value="${errors.email}"> </c:out></td>
-        </tr>--%>
+        </tr>
         <tr>
             <td>Age</td>
             <td><input type="text" name="age" value="${employee.age}" maxlength="2" pattern="^[0-9]{1,2}"></td>
@@ -50,7 +50,7 @@
         <tr>
             <td>Department id</td>
             <td>
-                <select name="departmentId">
+                <select name="newDepartmentId">
                     <c:forEach items="${allDepartments}" var="department">
                         <option value="${department.id}" selected>${department.departmentName}</option>
                     </c:forEach>
@@ -61,6 +61,8 @@
             <td>
                 <button type="submit">Update</button>
                 <input type="hidden" name="employeeId" value="${employee.id}">
+                <input type="hidden" name="updatableEmail" value="${updatableEmail}">
+                <input type="hidden" name="departmentId" value="${employee.department.id}">
             </td>
         </tr>
         <tr>

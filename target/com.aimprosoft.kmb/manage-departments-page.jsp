@@ -50,7 +50,7 @@
                     </form>
                 </td>
                 <td>
-                    <form action="manage-employees" method="get">
+                    <form action="manage-employees?departmentId=${departmentId}" method="get">
                         <button type="submit">list employees</button>
                         <input type="hidden" value="${department.id}" name="departmentId">
                     </form>

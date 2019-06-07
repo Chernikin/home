@@ -24,11 +24,9 @@ public class ManageEmployeesPage implements Controller {
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
 
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        final List<Employee> allEmployeesFromDepartment;
-        allEmployeesFromDepartment = employeeService.getAllEmployeesFromDepartment(departmentId);
+        final List<Employee> allEmployeesFromDepartment = employeeService.getAllEmployeesFromDepartment(departmentId);
         req.setAttribute("allEmployeesFromDepartment", allEmployeesFromDepartment);
         req.setAttribute("departmentId", departmentId);
-
 
         /*
         final ModelAndView modelAndView = new ModelAndView("/manage-employees-page.jsp?departmentId=" + departmentId);

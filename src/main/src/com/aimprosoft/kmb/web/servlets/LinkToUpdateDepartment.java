@@ -19,9 +19,10 @@ public class LinkToUpdateDepartment implements Controller {
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        final Department departmentById;
-        departmentById = departmentService.getById(departmentId);
+        final Department departmentById = departmentService.getById(departmentId);
+        final String departmentName = departmentById.getDepartmentName();
         req.setAttribute("department", departmentById);
+        req.setAttribute("updatableName", departmentName);
         req.setAttribute("departmentId", departmentId);
 
     /*    final ModelAndView modelAndView = new ModelAndView("/update-department-page.jsp");

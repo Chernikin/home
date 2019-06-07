@@ -32,12 +32,13 @@ public class CreateEmployeeAction implements Controller {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         Department department = departmentService.getById(departmentId);
         employee.setDepartment(department);
-        final ValidationResult validationResult = validator.validate(employee);
+        String updatableEmail = "validateEmail";
+        final ValidationResult validationResult = validator.validate(employee, updatableEmail);
         if (validationResult.hasError()) {
             req.setAttribute("errors", validationResult.getErrorMessage());
             req.setAttribute("incorrectEmployeeData", employee);
             req.setAttribute("departmentId", departmentId);
-            throw new ValidationException("error" + validationResult.getErrorMessage());
+            throw new ValidationException("error");
         }
 
         req.setAttribute("departmentId", departmentId);

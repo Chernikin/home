@@ -22,8 +22,10 @@ public class LinkToUpdateEmployee implements Controller {
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         Employee employeeById = employeeService.getById(employeeId);
+        final String email = employeeById.getEmail();
         final List<Department> allDepartments = departmentService.getAll();
         req.setAttribute("employee", employeeById);
+        req.setAttribute("updatableEmail", email);
         req.setAttribute("allDepartments", allDepartments);
 
     /*    final ModelAndView modelAndView = new ModelAndView("/update-employee-page.jsp");

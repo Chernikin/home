@@ -22,9 +22,9 @@ public class UpdateDepartmentAction implements Controller {
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        final Department department;
-        department = getDepartment(req, departmentId);
-        final ValidationResult validationResult = validator.validate(department);
+        final Department department = getDepartment(req, departmentId);
+        final String updatableName = req.getParameter("updatableName");
+        final ValidationResult validationResult = validator.validate(department, updatableName);
         if (validationResult.hasError()) {
             /*processError(req, resp, department, validationResult);*/
             req.setAttribute("errors", validationResult.getErrorMessage());

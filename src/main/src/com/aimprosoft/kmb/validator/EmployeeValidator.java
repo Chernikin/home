@@ -22,7 +22,7 @@ public class EmployeeValidator implements Validator<Employee> {
 
 
     @Override
-    public ValidationResult validate(Employee employee) {
+    public ValidationResult validate(Employee employee, String updatableEmail) {
         final ValidationResult validationResult = new ValidationResult();
         if (!validateFirstName(employee)) {
             validationResult.addErrorMessage("firstName", "First name is not valid. First name cannot be empty or more than 25 characters.");
@@ -33,11 +33,11 @@ public class EmployeeValidator implements Validator<Employee> {
         if (!validateEmail(employee)) {
             validationResult.addErrorMessage("email", "E-mail is not valid. E-mail cannot be empty or more than 50 characters. Must contain '@' and '.' .");
         }
-        if (!validateEmailExist(employee)) {
+        if (!validateEmailExist(employee, updatableEmail)) {
             validationResult.addErrorMessage("email", "E-mail is not valid. This e-mail is already used!");
         }
         if (!validateAge(employee)) {
-            validationResult.addErrorMessage("age", "Age is not valid. Age cannot be less than 18 and more than 99 years old.");
+            validationResult.addErrorMessage("age", "Age is not valid. Age cannot be empty or less than 18 and more than 99 years old.");
         }
         if (!validatePhoneNumber(employee)) {
             validationResult.addErrorMessage("phoneNumber", "Phone number is not valid. Phone number cannot be more than 13 digits.");
@@ -66,11 +66,16 @@ public class EmployeeValidator implements Validator<Employee> {
         return email != null && !email.isEmpty() && email.contains("@") && email.contains(".") && email.length() <= MAX_EMAIL_LENGTH;
     }
 
-    private boolean validateEmailExist(Employee employee) {
-        try {
-            return !employeeDao.isExists(employee);
-        } catch (RepositoryException e) {
-            logger.error("Can`t check email on exist!");
+    private boolean validateEmailExist(Employee employee, String updatableEmail) {
+        if (updatableEmail.equals(employee.getEmail())) {
+            return true;
+        }
+        if (!updatableEmail.equals(employee.getEmail())) {
+            try {
+                return !employeeDao.isExists(employee);
+            } catch (RepositoryException e) {
+                logger.error("Can`t check email on exist!");
+            }
         }
         return false;
     }

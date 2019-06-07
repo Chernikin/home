@@ -16,12 +16,12 @@ public class EmployeeService implements GenericService<Employee> {
 
     @Override
     public void create(Employee employee) throws ServiceException {
-        final boolean emailExists = employeeDao.isExists(employee);
-        if (!emailExists) {
+       /* final boolean emailExists = employeeDao.isExists(employee);
+        if (!emailExists) {*/
             employeeDao.create(employee);
-        } else {
+     /*   } else {
             throw new ValidationException("Can`t create employee, because this email already used!");
-        }
+        }*/
     }
 
     @Override

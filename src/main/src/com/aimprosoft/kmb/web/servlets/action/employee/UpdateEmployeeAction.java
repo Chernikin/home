@@ -29,17 +29,19 @@ public class UpdateEmployeeAction implements Controller {
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
-        final long departmentId = Long.parseLong(req.getParameter("departmentId"));
+        final long departmentId = Long.parseLong(req.getParameter("newDepartmentId"));
         final Employee employee = getEmployee(req, employeeId, departmentId);
         final List<Department> allDepartments = departmentService.getAll();
-        final ValidationResult validationResult = validator.validate(employee);
+        final String updatableEmail = req.getParameter("updatableEmail");
+        final ValidationResult validationResult = validator.validate(employee, updatableEmail);
         if (validationResult.hasError()) {
             req.setAttribute("errors", validationResult.getErrorMessage());
             req.setAttribute("employee", employee);
             req.setAttribute("allDepartments", allDepartments);
             throw new ValidationException("error");
         }
-        req.setAttribute("departmentId", departmentId);
+        final int previousDepId = Integer.parseInt(req.getParameter("departmentId"));
+        req.setAttribute("departmentId", previousDepId);
         employeeService.update(employee);
 
 

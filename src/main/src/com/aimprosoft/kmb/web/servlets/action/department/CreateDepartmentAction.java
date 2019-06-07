@@ -22,7 +22,8 @@ public class CreateDepartmentAction implements Controller {
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
 
         final Department department = getDepartment(req);
-        final ValidationResult validationResult = validator.validate(department);
+        String updatableName = "validateName";
+        final ValidationResult validationResult = validator.validate(department, updatableName);
         if (validationResult.hasError()) {
             req.setAttribute("errors", validationResult.getErrorMessage());
             req.setAttribute("incorrectDepartmentData", department);

@@ -22,7 +22,6 @@ public class DeleteEmployeeAction implements Controller {
         req.setAttribute("departmentId", departmentId);
         employeeService.deleteById(employeeId);
 
-
       /*  final ModelAndView modelAndView = new ModelAndView("/manage-employees");
         modelAndView.addModelData("successMessage", "Employee with id: " + employeeId + " delete!");
         modelAndView.addModelData("departmentId", departmentId);

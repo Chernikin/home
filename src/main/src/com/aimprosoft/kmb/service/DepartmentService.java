@@ -16,12 +16,12 @@ public class DepartmentService implements GenericService<Department> {
 
     @Override
     public void create(Department department) throws ServiceException {
-        final boolean departmentExists = departmentDao.isExists(department);
-        if (!departmentExists) {
+      /*  final boolean departmentExists = departmentDao.isExists(department);
+        if (!departmentExists) {*/
             departmentDao.create(department);
-        } else {
+       /* } else {
             throw new ValidationException("Can`t create department, because this department name already used!");
-        }
+        }*/
     }
 
 

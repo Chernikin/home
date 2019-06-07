@@ -35,26 +35,34 @@ public class GeneralPage extends HttpServlet {
         uriMappings.put("/add-department", new PageMapping(new CreateDepartmentAction(), "POST", "/", "/create-department-page.jsp"));
         uriMappings.put("/link-to-update-department", new PageMapping(new LinkToUpdateDepartment(), "GET", "/update-department-page.jsp", null));
         uriMappings.put("/update-department", new PageMapping(new UpdateDepartmentAction(), "POST", "/", "/update-department-page.jsp"));
-        uriMappings.put("/delete-department", new PageMapping(new DeleteDepartmentAction(), "GET", "/", null));
+        uriMappings.put("/delete-department", new PageMapping(new DeleteDepartmentAction(), "POST", "/", null));
         uriMappings.put("/manage-employees", new PageMapping(new ManageEmployeesPage(), "GET", "/manage-employees-page.jsp", null));
         uriMappings.put("/link-to-create-employee", new PageMapping(new LinkToCreateEmployee(), "GET", "/create-employee-page.jsp", null));
         uriMappings.put("/add-employee", new PageMapping(new CreateEmployeeAction(), "POST", "/manage-employees", "/create-employee-page.jsp"));
         uriMappings.put("/link-to-update-employee", new PageMapping(new LinkToUpdateEmployee(), "GET", "/update-employee-page.jsp", null));
         uriMappings.put("/update-employee", new PageMapping(new UpdateEmployeeAction(), "POST", "/manage-employees", "/update-employee-page.jsp"));
-        uriMappings.put("/delete-employee", new PageMapping(new DeleteEmployeeAction(), "GET", "/manage-employees", null));
+        uriMappings.put("/delete-employee", new PageMapping(new DeleteEmployeeAction(), "POST", "/manage-employees", null));
     }
 
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
         final PageMapping mapping = uriMappings.get(req.getRequestURI());
-        //ModelAndView modelAndView = null;
 
         try {
             mapping.getController().processRequest(req, resp);
-            req.getRequestDispatcher(mapping.getJsp()).forward(req, resp);
+            if (mapping.getMethod().equals("GET")) {
+                req.getRequestDispatcher(mapping.getJsp()).forward(req, resp);
+            }
+            if (mapping.getMethod().equals("POST")) {
+                if (mapping.getJsp().equals("/manage-employees")) {
+                    final long departmentId = Long.parseLong(req.getParameter("departmentId"));
+                    resp.sendRedirect(mapping.getJsp() + "?departmentId=" + departmentId);
+                } else {
+                    resp.sendRedirect(mapping.getJsp());
+                }
+            }
         } catch (ServiceException e) {
             logger.error("Data is not valid!");
             req.getRequestDispatcher(mapping.getRedirect()).forward(req, resp);

@@ -14,16 +14,13 @@ public class EmployeeTemplate {
         employee.setLastName(req.getParameter("lastName"));
         employee.setEmail(req.getParameter("email"));
         employee.setPhoneNumber(req.getParameter("phoneNumber"));
-        /* employee.setAge(Integer.parseInt(req.getParameter("age")));*/
-        if (req.getParameter("age").isEmpty() || !req.getParameter("age").matches("[0-9]{1,2}")) {
-            employee.setAge(0);
-        } else {
-            employee.setAge(Integer.parseInt(req.getParameter("age")));
-        }
         try {
+            employee.setAge(Integer.parseInt(req.getParameter("age")));
             employee.setEmploymentDate(simpleDateFormat.parse(req.getParameter("employmentDate")));
         } catch (ParseException e) {
             System.out.println("Can`t parse date");
+        } catch (NumberFormatException e) {
+            System.out.println("Can`t parse to Integer.");
         }
         return employee;
     }

@@ -32,7 +32,7 @@
         </tr>
         <tr>
             <td>Age</td>
-            <td><input value="${incorrectEmployeeData.age}" type="text" name="age" <%--maxlength="2" pattern="^[0-9]{1,2}"--%>>
+            <td><input value="${incorrectEmployeeData.age}" type="text" name="age">
             </td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
@@ -48,12 +48,6 @@
             ></td>
             <td><c:out value="${errors.employmentDate}"> </c:out></td>
         </tr>
-        <%--<tr>
-            <td>Department id</td>
-            <td>
-                <input disabled type="text" name="departmentId" value="${departmentId}">
-            </td>
-        </tr>--%>
         <tr>
             <td>
                 <button type="submit">Create</button>

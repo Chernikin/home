@@ -13,7 +13,7 @@
 </head>
 <body>
 <h3>Updating department with id: ${department.id}</h3>
-<form action="update-department" method="get">
+<form action="update-department" method="post">
     <table>
         <tr>
             <td>Department name</td>
@@ -29,6 +29,7 @@
             <td>
                 <button type="submit">Update</button>
                 <input type="hidden" name="departmentId" value="${department.id}">
+                <input type="hidden" name="updatableName" value="${updatableName}">
             </td>
         </tr>
         <tr>
