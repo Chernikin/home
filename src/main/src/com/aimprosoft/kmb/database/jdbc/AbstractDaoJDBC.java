@@ -10,13 +10,17 @@ import java.util.List;
 public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
 
 
-    protected abstract String getTableName();
+    private JdbcTemplate<T> jdbcTemplate = new JdbcTemplate<>();
 
-    protected abstract String getSqlConditionForGetById();
+    protected abstract String CREATE();
 
-    protected abstract String getSqlConditionForCreate();
+    protected abstract String GET_BY_ID();
 
-    protected abstract String getSqlConditionForUpdate();
+    protected abstract String UPDATE();
+
+    protected abstract String ALL();
+
+    protected abstract String DELETE();
 
     protected abstract long getIdForUpdate(T object);
 
@@ -24,11 +28,13 @@ public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
 
     protected abstract List<Object> getObjects(T object);
 
-    private JdbcTemplate<T> jdbcTemplate = new JdbcTemplate<>();
+    public JdbcTemplate<T> getJdbcTemplate() {
+        return jdbcTemplate;
+    }
 
     @Override
     public void create(T object) throws RepositoryException {
-        String sql = "INSERT INTO " + getTableName() + getSqlConditionForCreate();
+        String sql = CREATE();
         List<Object> params = getObjects(object);
         String log = "Can`t create";
         jdbcTemplate.create(sql, params, log);
@@ -36,19 +42,19 @@ public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
 
     @Override
     public T getById(long id) throws RepositoryException {
-        String sql = "SELECT * FROM " + getTableName() + getSqlConditionForGetById();
+        String sql = GET_BY_ID();
         return jdbcTemplate.getById(sql, id, rowMapper());
     }
 
     @Override
     public List<T> getAll() throws RepositoryException {
-        String sql = "SELECT * FROM " + getTableName();
+        String sql = ALL();
         return jdbcTemplate.getAll(sql, rowMapper());
     }
 
     @Override
     public T update(T object) throws RepositoryException {
-        String sql = "UPDATE " + getTableName() + getSqlConditionForUpdate();
+        String sql = UPDATE();
         List<Object> params = getObjects(object);
         params.add(getIdForUpdate(object));
         String log = "Can`t to update";
@@ -57,7 +63,7 @@ public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
 
     @Override
     public void deleteById(long id) throws RepositoryException {
-        String sql = "DELETE FROM " + getTableName() + " WHERE id = ?";
+        String sql = DELETE();
         jdbcTemplate.deleteById(sql, id);
     }
 

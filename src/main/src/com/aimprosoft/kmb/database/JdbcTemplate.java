@@ -32,14 +32,14 @@ public class JdbcTemplate<T> {
             if (resultSet.next()) {
                 result = rowMapper.extract(resultSet);
             }
+            resultSet.close();
         } catch (SQLException e) {
             logger.error("Can`t get by id: " + id, e);
-            throw new RepositoryException("Can`t get by id");
+            throw new RepositoryException("Can`t get by id", e);
         } finally {
             try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
+                assert preparedStatement != null;
+                preparedStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -60,15 +60,15 @@ public class JdbcTemplate<T> {
             while (resultSet.next()) {
                 all.add(rowMapper.extract(resultSet));
             }
+            resultSet.close();
             return all;
         } catch (SQLException e) {
             logger.error("Can`t get all", e);
-            throw new RepositoryException("Can`t get all");
+            throw new RepositoryException("Can`t get all", e);
         } finally {
             try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
+                assert preparedStatement != null;
+                preparedStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -96,17 +96,16 @@ public class JdbcTemplate<T> {
         } catch (SQLException e) {
             logger.error(log, e);
             DatabaseConnectionManager.rollback(connection);
-            throw new RepositoryException("Can`t get logic");
+            throw new RepositoryException("Can`t get logic", e);
         } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            try {
+                assert preparedStatement != null;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            DatabaseConnectionManager.closeConnection(connection);
         }
+        DatabaseConnectionManager.closeConnection(connection);
     }
 
     public boolean isExist(String sql, List<Object> params, String log) throws RepositoryException {
@@ -124,36 +123,44 @@ public class JdbcTemplate<T> {
                 final int result = resultSet.getInt("count(id)");
                 return result == 1;
             }
+            resultSet.close();
         } catch (SQLException e) {
             logger.error(log);
-            throw new RepositoryException("Can`t check items on exist");
+            throw new RepositoryException("Can`t check items on exist", e);
         } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            try {
+                assert preparedStatement != null;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            DatabaseConnectionManager.closeConnection(connection);
         }
+        DatabaseConnectionManager.closeConnection(connection);
         return false;
     }
 
 
     public void deleteById(String sql, long id) throws RepositoryException {
-        Connection connection = DatabaseConnectionManager.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            connection = DatabaseConnectionManager.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             DatabaseConnectionManager.commit(connection);
-            preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Can`t delete", e);
             DatabaseConnectionManager.rollback(connection);
-            throw new RepositoryException("Can`t delete");
+            throw new RepositoryException("Can`t delete", e);
         } finally {
+            try {
+                assert preparedStatement != null;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             DatabaseConnectionManager.closeConnection(connection);
         }
     }

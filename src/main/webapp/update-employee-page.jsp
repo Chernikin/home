@@ -52,7 +52,8 @@
             <td>
                 <select name="newDepartmentId">
                     <c:forEach items="${allDepartments}" var="department">
-                        <option value="${department.id}" selected>${department.departmentName}</option>
+                        <option value="${department.id}"
+                                <c:if test="${department.id eq employee.department.id}">selected="selected"</c:if>>${department.departmentName}</option>
                     </c:forEach>
                 </select>
             </td>
@@ -72,5 +73,6 @@
         </tr>
     </table>
 </form>
+<button><a href="/">Main page</a></button>
 </body>
 </html>

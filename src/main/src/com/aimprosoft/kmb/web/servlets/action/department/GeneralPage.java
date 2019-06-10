@@ -25,9 +25,7 @@ import java.util.Map;
 public class GeneralPage extends HttpServlet {
 
     private static Logger logger = Logger.getLogger(GeneralPage.class);
-
     private Map<String, PageMapping> uriMappings = new HashMap<>();
-
 
     @Override
     public void init() {

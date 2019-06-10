@@ -16,11 +16,13 @@ public class EmployeeTemplate {
         employee.setPhoneNumber(req.getParameter("phoneNumber"));
         try {
             employee.setAge(Integer.parseInt(req.getParameter("age")));
+        } catch (NumberFormatException e) {
+            System.out.println("Can`t parse to Integer.");
+        }
+        try {
             employee.setEmploymentDate(simpleDateFormat.parse(req.getParameter("employmentDate")));
         } catch (ParseException e) {
             System.out.println("Can`t parse date");
-        } catch (NumberFormatException e) {
-            System.out.println("Can`t parse to Integer.");
         }
         return employee;
     }

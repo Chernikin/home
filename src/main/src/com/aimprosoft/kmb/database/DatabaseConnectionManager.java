@@ -1,25 +1,40 @@
 package com.aimprosoft.kmb.database;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.apache.log4j.Logger;
 
 public class DatabaseConnectionManager {
 
-
-    private final static String mysql_database_url = "jdbc:mysql://localhost:3306/kmb";
-    private final static String mysql_database_username = "root";
-    private final static String mysql_database_password = "ChernikinV12";
-
     private static Logger logger = Logger.getLogger(DatabaseConnectionManager.class);
 
     public static Connection getConnection() throws RepositoryException {
+
+        Properties properties = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            final Connection connection = DriverManager.getConnection(mysql_database_url, mysql_database_username, mysql_database_password);
+            FileInputStream fileInputStream = new FileInputStream("connection.properties");
+            properties = new Properties();
+            properties.load(fileInputStream);
+        } catch (IOException e) {
+            throw new RepositoryException("Can`t get connection properties", e);
+
+        }
+
+        final String driver = properties.getProperty("jdbc.driver");
+        final String url = properties.getProperty("jdbc.url");
+        final String username = properties.getProperty("jdbc.username");
+        final String password = properties.getProperty("jdbc.password");
+        try {
+            Class.forName(driver);
+            final Connection connection = DriverManager.getConnection(url, username, password);
             connection.setAutoCommit(false);
             return connection;
         } catch (SQLException e) {

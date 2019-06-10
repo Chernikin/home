@@ -27,7 +27,7 @@ public class UpdateDepartmentAction implements Controller {
         final ValidationResult validationResult = validator.validate(department, updatableName);
         if (validationResult.hasError()) {
             /*processError(req, resp, department, validationResult);*/
-            req.setAttribute("errors", validationResult.getErrorMessage());
+            req.setAttribute("listerrors", validationResult.getErrorMessage());
             req.setAttribute("department", department);
             throw new ValidationException("error");
         }

@@ -2,7 +2,6 @@ package com.aimprosoft.kmb.database.jdbc;
 
 import com.aimprosoft.kmb.database.DatabaseConnectionManager;
 import com.aimprosoft.kmb.database.EmployeeDao;
-import com.aimprosoft.kmb.database.JdbcTemplate;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.rowMapper.EmployeeRowMapper;
@@ -16,36 +15,47 @@ import java.util.List;
 
 public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements EmployeeDao {
 
-
-    private JdbcTemplate<Employee> jdbcTemplate = new JdbcTemplate<>();
     private EmployeeRowMapper employeeRowMapper = new EmployeeRowMapper();
     private static Logger logger = Logger.getLogger(EmployeeDaoJDBC.class);
 
     @Override
-    protected String getTableName() {
-        return "employees";
+    protected final String CREATE() {
+        return "INSERT INTO employees(first_name, last_name, email, age, phone_number, employment_date, department_id) VALUES (?,?,?,?,?,?,?)";
     }
 
     @Override
-    protected String getSqlConditionForGetById() {
-        return " join departments on employees.department_id = departments.id WHERE employees.id = ?";
+    protected final String GET_BY_ID() {
+        return "SELECT * FROM employees join departments on employees.department_id = departments.id WHERE employees.id = ?";
     }
 
     @Override
-    protected String getSqlConditionForCreate() {
-        return "(first_name, last_name, email, age, phone_number, employment_date, department_id) VALUES (?,?,?,?,?,?,?)";
-    }
-
-    @Override
-    protected String getSqlConditionForUpdate() {
-        return " SET first_name = ?, last_name = ?, email = ?, age = ?, phone_number = ?, " +
+    protected final String UPDATE() {
+        return "UPDATE employees SET first_name = ?, last_name = ?, email = ?, age = ?, phone_number = ?, " +
                 "employment_date = ?, department_id = ? WHERE id = ?";
     }
+
+    @Override
+    protected final String ALL() {
+        return "SELECT * FROM employees";
+    }
+
+
+    private static final String ALL_FROM_DEPARTMENT = "SELECT * FROM employees join departments on employees.department_id = departments.id WHERE department_id = ?";
+
+    @Override
+    protected final String DELETE() {
+        return "DELETE FROM employees WHERE id = ?";
+    }
+
+
+    private static final String DELETE_ALL_FROM_DEPARTMENT = "DELETE FROM employees WHERE department_id = ?";
 
     @Override
     protected long getIdForUpdate(Employee employee) {
         return employee.getId();
     }
+
+    private static final String CHECK_ON_EXIST = "SELECT count(id) FROM employees WHERE email = ?";
 
     @Override
     protected RowMapper<Employee> rowMapper() {
@@ -55,7 +65,7 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
     @Override
     public List<Employee> getAllFromDepartment(long id) throws RepositoryException {
         Connection connection = DatabaseConnectionManager.getConnection();
-        String sql = "SELECT * FROM employees join departments on employees.department_id = departments.id WHERE department_id = ?";
+        String sql = ALL_FROM_DEPARTMENT;
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(sql);
@@ -65,6 +75,7 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
             while (resultSet.next()) {
                 employees.add(employeeRowMapper.extract(resultSet));
             }
+            resultSet.close();
             return employees;
         } catch (SQLException e) {
             logger.error("Can`t get all employees from department with id: " + id, e);
@@ -76,6 +87,7 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
             } catch (SQLException e) {
                 logger.error("Can`t closed statement.");
             }
+
             DatabaseConnectionManager.closeConnection(connection);
         }
     }
@@ -83,7 +95,7 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
     @Override
     public void deleteAllFromDepartment(long id) throws RepositoryException {
         Connection connection = DatabaseConnectionManager.getConnection();
-        String sql = "DELETE FROM employees WHERE department_id = ?";
+        String sql = DELETE_ALL_FROM_DEPARTMENT;
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(sql);
@@ -108,11 +120,11 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
 
     @Override
     public boolean isExists(Employee employee) throws RepositoryException {
-        String sql = "SELECT count(id) FROM employees WHERE email = ?";
+        String sql = CHECK_ON_EXIST;
         List<Object> params = new ArrayList<>();
         params.add(employee.getEmail());
         String log = "Can`t check the existence same email of the employee";
-        return jdbcTemplate.isExist(sql, params, log);
+        return getJdbcTemplate().isExist(sql, params, log);
     }
 
     @Override
@@ -127,69 +139,5 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
         params.add(employee.getDepartment().getId());
         return params;
     }
-
-
-
-
-
-  /*  @Override
-    public void create(Employee employee) throws RepositoryException {
-        queryBuilderSql.setSqlParams(EMPLOYEE_PARAMS);
-        super.create(employee);
-    }*/
-
-/*
-    @Override
-    public void create(Employee employee) throws RepositoryException {
-        String sql = "INSERT INTO employees (first_name, last_name, email, age, phone_number, employment_date, department_id) VALUES (?,?,?,?,?,?,?)";
-        List<Object> params = getObjects(employee);
-        String log = "Can`t create employee";
-        jdbcTemplate.create(sql, params, log);
-    }*/
-
-/*
-    @Override
-    public Employee getById(long id) throws RepositoryException {
-        String sql = "SELECT * FROM employees join departments on employees.department_id = departments.id WHERE employees.id = ?";
-        final Employee employee = jdbcTemplate.getById(sql, id, employeeRowMapper);
-        return employee;
-    }*/
-
-
-    /* @Override
-    public List<Employee> getAll() throws RepositoryException {
-        String sql = "SELECT * FROM employees";
-        final List<Employee> allEmployees = jdbcTemplate.getAll(sql, employeeRowMapper);
-        return allEmployees;
-    }*/
-
-
-   /* @Override
-    public Employee update(Employee employee) throws RepositoryException {
-        queryBuilderSql.setSqlParams(EMPLOYEE_UPDATE_PARAMS);
-       return null;
-    }*/
-
-    /*@Override
-    public Employee update(Employee employee) throws RepositoryException {
-        String sql = "UPDATE departments SET department_name = ?, comments = ? WHERE id = ?";
-        List<Object> params = getObjects(employee);
-        params.add(employee.getId());
-        String log = "Can`t to update department";
-        return jdbcTemplate.update(sql, params, log);
-    }*/
-
-/*
-    @Override
-    public void deleteById(long id) throws RepositoryException {
-        super.deleteById(id);
-    }*/
-
-    /*
-    @Override
-    public void deleteById(long id) throws RepositoryException {
-        String sql = "DELETE FROM employees WHERE id = ?";
-        jdbcTemplate.deleteById(sql, id);
-    }*/
 
 }

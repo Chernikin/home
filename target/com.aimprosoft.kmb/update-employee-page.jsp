@@ -33,7 +33,7 @@
         </tr>
         <tr>
             <td>Age</td>
-            <td><input type="text" name="age" value="${employee.age}" maxlength="2" pattern="^[0-9]{1,2}"></td>
+            <td><input type="text" name="age" value="${employee.age}"></td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
@@ -52,7 +52,8 @@
             <td>
                 <select name="newDepartmentId">
                     <c:forEach items="${allDepartments}" var="department">
-                        <option value="${department.id}" selected>${department.departmentName}</option>
+                        <option value="${department.id}"
+                                <c:if test="${department.id eq employee.department.id}">selected="selected"</c:if>>${department.departmentName}</option>
                     </c:forEach>
                 </select>
             </td>
@@ -72,5 +73,6 @@
         </tr>
     </table>
 </form>
+<button><a href="/">Main page</a></button>
 </body>
 </html>

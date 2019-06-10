@@ -66,7 +66,8 @@
     </table>
 
     <button type="button" name="back" onclick="history.back()"><b>back</b></button>
-       
+    <button><a href="/">Main page</a></button>
+
 </div>
 </body>
 </html>

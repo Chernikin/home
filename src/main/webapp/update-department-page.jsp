@@ -39,5 +39,6 @@
         </tr>
     </table>
 </form>
+<button><a href="/">Main page</a></button>
 </body>
 </html>
