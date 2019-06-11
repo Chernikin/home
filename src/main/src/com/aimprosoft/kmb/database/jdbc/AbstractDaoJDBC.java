@@ -2,15 +2,16 @@ package com.aimprosoft.kmb.database.jdbc;
 
 import com.aimprosoft.kmb.database.GenericDao;
 import com.aimprosoft.kmb.database.JdbcTemplate;
+import com.aimprosoft.kmb.domain.Entity;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 
 import java.util.List;
 
-public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
+public abstract class AbstractDaoJDBC<T extends Entity, R> implements GenericDao<T, R> {
 
 
-    private JdbcTemplate<T> jdbcTemplate = new JdbcTemplate<>();
+    private JdbcTemplate<T, R> jdbcTemplate = new JdbcTemplate<>();
 
     protected abstract String CREATE();
 
@@ -28,7 +29,7 @@ public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
 
     protected abstract List<Object> getObjects(T object);
 
-    public JdbcTemplate<T> getJdbcTemplate() {
+    public JdbcTemplate<T, R> getJdbcTemplate() {
         return jdbcTemplate;
     }
 
@@ -41,7 +42,7 @@ public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
     }
 
     @Override
-    public T getById(long id) throws RepositoryException {
+    public T getById(R id) throws RepositoryException {
         String sql = GET_BY_ID();
         return jdbcTemplate.getById(sql, id, rowMapper());
     }
@@ -62,7 +63,7 @@ public abstract class AbstractDaoJDBC<T> implements GenericDao<T> {
     }
 
     @Override
-    public void deleteById(long id) throws RepositoryException {
+    public void deleteById(R id) throws RepositoryException {
         String sql = DELETE();
         jdbcTemplate.deleteById(sql, id);
     }

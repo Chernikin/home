@@ -1,40 +1,43 @@
 package com.aimprosoft.kmb.database;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.aimprosoft.kmb.exceptions.RepositoryException;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import com.aimprosoft.kmb.exceptions.RepositoryException;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-import org.apache.log4j.Logger;
-
 public class DatabaseConnectionManager {
+
+    private static PropertiesResolver propertiesResolver = new PropertiesResolver();
 
     private static Logger logger = Logger.getLogger(DatabaseConnectionManager.class);
 
-    public static Connection getConnection() throws RepositoryException {
+    private static String databaseDriver;
+    private static String databaseUrl;
+    private static String databaseUserName;
+    private static String databasePassword;
 
-        Properties properties = null;
-        try {
-            FileInputStream fileInputStream = new FileInputStream("connection.properties");
-            properties = new Properties();
-            properties.load(fileInputStream);
-        } catch (IOException e) {
-            throw new RepositoryException("Can`t get connection properties", e);
-
+    private static void initDbProperties() throws RepositoryException {
+        final Properties dbProperties = propertiesResolver.getProperties();
+        if (dbProperties.isEmpty()) {
+            logger.error("Database properties is empty.");
+            throw new RepositoryException("Database properties is empty.");
         }
 
-        final String driver = properties.getProperty("jdbc.driver");
-        final String url = properties.getProperty("jdbc.url");
-        final String username = properties.getProperty("jdbc.username");
-        final String password = properties.getProperty("jdbc.password");
+        databaseDriver = dbProperties.getProperty("database.driver");
+        databaseUrl = dbProperties.getProperty("database.url");
+        databaseUserName = dbProperties.getProperty("database.username");
+        databasePassword = dbProperties.getProperty("database.password");
+    }
+
+
+    public static Connection getConnection() throws RepositoryException {
+        initDbProperties();
         try {
-            Class.forName(driver);
-            final Connection connection = DriverManager.getConnection(url, username, password);
+            Class.forName(databaseDriver);
+            final Connection connection = DriverManager.getConnection(databaseUrl, databaseUserName, databasePassword);
             connection.setAutoCommit(false);
             return connection;
         } catch (SQLException e) {

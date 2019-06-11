@@ -9,7 +9,7 @@ import com.aimprosoft.kmb.rowMapper.RowMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DepartmentDaoJDBC extends AbstractDaoJDBC<Department> implements DepartmentDao {
+public class DepartmentDaoJDBC extends AbstractDaoJDBC<Department, Long> implements DepartmentDao {
 
 
     private DepartmentRowMapper departmentRowMapper = new DepartmentRowMapper();
@@ -26,7 +26,7 @@ public class DepartmentDaoJDBC extends AbstractDaoJDBC<Department> implements De
 
     @Override
     protected String UPDATE() {
-        return " SET department_name = ?, comments = ? WHERE id = ?";
+        return " UPDATE departments SET department_name = ?, comments = ? WHERE id = ?";
     }
 
     @Override

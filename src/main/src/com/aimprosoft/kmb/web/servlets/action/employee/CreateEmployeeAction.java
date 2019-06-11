@@ -41,13 +41,8 @@ public class CreateEmployeeAction implements Controller {
             throw new ValidationException("error");
         }
 
-        req.setAttribute("departmentId", departmentId);
+        req.setAttribute("dataForRedirect", "?departmentId=" + departmentId);
         employeeService.create(employee);
-
-       /* final ModelAndView modelAndView = new ModelAndView("/manage-employees");
-        modelAndView.addModelData("departmentId", departmentId);
-        modelAndView.addModelData("incorrectEmployeeData", employee);
-        return modelAndView;*/
 
     }
 
@@ -55,27 +50,4 @@ public class CreateEmployeeAction implements Controller {
         final Employee employeeNew = new Employee();
         return employeeTemplate.extractEmployeeFromRequest(req, employeeNew);
     }
-
-  /*  private void processError(HttpServletRequest req, HttpServletResponse resp, Employee employee, ValidationResult validationResult) throws ServletException, IOException {
-        final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        req.setAttribute("errors", validationResult.getErrorMessage());
-        req.setAttribute("incorrectEmployeeData", employee);
-        req.setAttribute("departmentId", departmentId);
-        req.getRequestDispatcher("create-employee-page.jsp").forward(req, resp);
-    }
-
-    private void create(HttpServletRequest req, HttpServletResponse resp, Employee employee) throws IOException, ServiceException {
-        final Department department;
-        final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        try {
-            department = departmentService.getById(departmentId);
-            employee.setDepartment(department);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-        employeeService.create(employee);
-        req.setAttribute("successMessage", "Employee successfully created!");
-        resp.sendRedirect("manage-employees-page?departmentId=" + departmentId);
-    }*/
-
 }

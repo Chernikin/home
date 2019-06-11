@@ -5,11 +5,11 @@ import com.aimprosoft.kmb.exceptions.RepositoryException;
 
 import java.util.List;
 
-public interface EmployeeDao extends GenericDao<Employee> {
+public interface EmployeeDao<R> extends GenericDao<Employee, R> {
 
-    List<Employee> getAllFromDepartment(long id) throws RepositoryException;
+    List<Employee> getAllFromDepartment(R id) throws RepositoryException;
 
     boolean isExists(Employee employee) throws RepositoryException;
 
-    void deleteAllFromDepartment(long id) throws RepositoryException;
+    void deleteAllFromDepartment(R id) throws RepositoryException;
 }

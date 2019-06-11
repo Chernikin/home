@@ -54,9 +54,9 @@ public class GeneralPage extends HttpServlet {
                 req.getRequestDispatcher(mapping.getJsp()).forward(req, resp);
             }
             if (mapping.getMethod().equals("POST")) {
-                if (mapping.getJsp().equals("/manage-employees")) {
-                    final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-                    resp.sendRedirect(mapping.getJsp() + "?departmentId=" + departmentId);
+                final Object dataForRedirect = req.getAttribute("dataForRedirect");
+                if (dataForRedirect != null) {
+                    resp.sendRedirect(mapping.getJsp() + dataForRedirect);
                 } else {
                     resp.sendRedirect(mapping.getJsp());
                 }
@@ -65,17 +65,5 @@ public class GeneralPage extends HttpServlet {
             logger.error("Data is not valid!");
             req.getRequestDispatcher(mapping.getRedirect()).forward(req, resp);
         }
-
-      /*  final String viewName = modelAndView.getViewName();
-        final Map<String, Object> modelData = modelAndView.getModelData();
-        prepareRenderData(modelData, req);*/
-
     }
-/*
-
-    private void prepareRenderData(Map<String, Object> modelData, HttpServletRequest req) {
-        modelData.forEach((name, value) -> req.setAttribute(name, value));
-    }
-*/
-
 }

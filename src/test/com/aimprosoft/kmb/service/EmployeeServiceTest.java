@@ -36,7 +36,7 @@ public class EmployeeServiceTest {
     public void returnEmployeeIfEmployeeUpdated() throws ServiceException {
 
         final EmployeeService employeeService = new EmployeeService();
-        final Employee employeeById = employeeService.getById(6);
+        final Employee employeeById = employeeService.getById(6L);
         final DepartmentService departmentService = new DepartmentService();
         final Department departmentById = departmentService.getById(1);
         employeeById.setFirstName("NEW NEW UPDATED");
@@ -54,7 +54,7 @@ public class EmployeeServiceTest {
     @Test
     public void returnNullIfEmployeeDeleteFromData() throws ServiceException {
         final EmployeeService employeeService = new EmployeeService();
-        employeeService.deleteById(7);
+        employeeService.deleteById(7L);
     }
 
 }

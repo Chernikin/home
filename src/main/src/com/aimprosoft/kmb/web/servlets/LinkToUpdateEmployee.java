@@ -27,11 +27,5 @@ public class LinkToUpdateEmployee implements Controller {
         req.setAttribute("employee", employeeById);
         req.setAttribute("updatableEmail", email);
         req.setAttribute("allDepartments", allDepartments);
-
-    /*    final ModelAndView modelAndView = new ModelAndView("/update-employee-page.jsp");
-        modelAndView.addModelData("employee", employeeById);
-        modelAndView.addModelData("allDepartments", allDepartments);
-        return modelAndView;
-    */
     }
 }

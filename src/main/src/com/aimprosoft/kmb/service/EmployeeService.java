@@ -9,14 +9,14 @@ import java.util.List;
 
 public class EmployeeService {
 
-    private final EmployeeDao employeeDao = new EmployeeDaoJDBC();
+    private final EmployeeDao<Long> employeeDao = new EmployeeDaoJDBC();
 
 
     public void create(Employee employee) throws ServiceException {
         employeeDao.create(employee);
     }
 
-    public Employee getById(long id) throws ServiceException {
+    public Employee getById(Long id) throws ServiceException {
         return employeeDao.getById(id);
     }
 
@@ -24,7 +24,7 @@ public class EmployeeService {
         return employeeDao.getAll();
     }
 
-    public List<Employee> getAllEmployeesFromDepartment(long id) throws ServiceException {
+    public List<Employee> getAllEmployeesFromDepartment(Long id) throws ServiceException {
         return employeeDao.getAllFromDepartment(id);
     }
 
@@ -32,11 +32,11 @@ public class EmployeeService {
         return employeeDao.update(employee);
     }
 
-    public void deleteById(long id) throws ServiceException {
+    public void deleteById(Long id) throws ServiceException {
         employeeDao.deleteById(id);
     }
 
-    public void deleteAllFromDepartment(long id) throws ServiceException {
+    public void deleteAllFromDepartment(Long id) throws ServiceException {
         employeeDao.deleteAllFromDepartment(id);
     }
 

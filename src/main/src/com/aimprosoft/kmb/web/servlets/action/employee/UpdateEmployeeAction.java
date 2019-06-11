@@ -41,14 +41,8 @@ public class UpdateEmployeeAction implements Controller {
             throw new ValidationException("error");
         }
         final int previousDepId = Integer.parseInt(req.getParameter("departmentId"));
-        req.setAttribute("departmentId", previousDepId);
+        req.setAttribute("dataForRedirect", "?departmentId=" + previousDepId);
         employeeService.update(employee);
-
-
-        /*final ModelAndView modelAndView = new ModelAndView("/manage-employees");
-        modelAndView.addModelData("departmentId", departmentId);
-         return modelAndView;
-    */
     }
 
     private Employee getEmployee(HttpServletRequest req, long employeeId, long departmentId) throws ServiceException {
@@ -59,16 +53,4 @@ public class UpdateEmployeeAction implements Controller {
         employee.setDepartment(departmentById);
         return employee;
     }
-/*
-    private void processError(HttpServletRequest req, HttpServletResponse resp, Employee employee, ValidationResult validationResult) throws ServletException, IOException {
-        req.setAttribute("errors", validationResult.getErrorMessage());
-        req.setAttribute("employee", employee);
-        req.getRequestDispatcher("update-employee-page.jsp").forward(req, resp);
-    }
-
-    private void update(HttpServletRequest req, HttpServletResponse resp, Employee employee, long departmentId) throws ServiceException, IOException {
-        employeeService.update(employee);
-        req.setAttribute("successMessage", "Employee with id: " + employee.getId() + " updated!");
-        resp.sendRedirect("manage-employees-page?departmentId=" + departmentId);
-    }*/
 }

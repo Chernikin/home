@@ -3,9 +3,9 @@ package com.aimprosoft.kmb.domain;
 import java.util.Date;
 import java.util.Objects;
 
-public class Employee {
+public class Employee implements Entity<Long> {
 
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -27,13 +27,16 @@ public class Employee {
         this.department = department;
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    @Override
+    public void setId(Long id) {
         this.id = id;
     }
+
 
     public String getFirstName() {
         return firstName;
@@ -97,8 +100,8 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id == employee.id &&
-                age == employee.age &&
+        return age == employee.age &&
+                Objects.equals(id, employee.id) &&
                 Objects.equals(firstName, employee.firstName) &&
                 Objects.equals(lastName, employee.lastName) &&
                 Objects.equals(email, employee.email) &&

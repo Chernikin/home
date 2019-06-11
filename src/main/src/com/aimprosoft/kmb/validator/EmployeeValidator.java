@@ -16,7 +16,6 @@ public class EmployeeValidator implements Validator<Employee> {
     private static final int MAX_EMAIL_LENGTH = 50;
     private static final int MAX_AGE = 99;
     private static final int MAX_PHONE_NUMBER_LENGTH = 13;
-    private static final int DEP_NOT_VALID_NUMBER = 0;
     private EmployeeDao employeeDao = new EmployeeDaoJDBC();
     private static Logger logger = Logger.getLogger(EmployeeValidator.class);
 
@@ -45,9 +44,6 @@ public class EmployeeValidator implements Validator<Employee> {
         if (!validateEmploymentDate(employee)) {
             validationResult.addErrorMessage("employmentDate", "Employment date is not valid. Date cannot be empty.");
         }
-       /* if (!validateDepartmentId(employee)) {
-            validationResult.addErrorMessage("departmentId", "Department id is not valid");
-        }*/
         return validationResult;
     }
 
@@ -93,10 +89,5 @@ public class EmployeeValidator implements Validator<Employee> {
     private boolean validateEmploymentDate(Employee employee) {
         final Date employmentDate = employee.getEmploymentDate();
         return employmentDate != null;
-    }
-
-    private boolean validateDepartmentId(Employee employee) {
-        final long departmentId = employee.getDepartment().getId();
-        return departmentId > DEP_NOT_VALID_NUMBER;
     }
 }

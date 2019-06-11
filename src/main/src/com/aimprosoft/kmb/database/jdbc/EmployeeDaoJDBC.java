@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements EmployeeDao {
+public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee, Long> implements EmployeeDao<Long> {
 
     private EmployeeRowMapper employeeRowMapper = new EmployeeRowMapper();
     private static Logger logger = Logger.getLogger(EmployeeDaoJDBC.class);
@@ -63,7 +63,7 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
     }
 
     @Override
-    public List<Employee> getAllFromDepartment(long id) throws RepositoryException {
+    public List<Employee> getAllFromDepartment(Long id) throws RepositoryException {
         Connection connection = DatabaseConnectionManager.getConnection();
         String sql = ALL_FROM_DEPARTMENT;
         PreparedStatement preparedStatement = null;
@@ -93,7 +93,7 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee> implements Employ
     }
 
     @Override
-    public void deleteAllFromDepartment(long id) throws RepositoryException {
+    public void deleteAllFromDepartment(Long id) throws RepositoryException {
         Connection connection = DatabaseConnectionManager.getConnection();
         String sql = DELETE_ALL_FROM_DEPARTMENT;
         PreparedStatement preparedStatement = null;

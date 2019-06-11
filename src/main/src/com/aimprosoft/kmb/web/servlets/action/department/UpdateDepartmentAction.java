@@ -26,19 +26,12 @@ public class UpdateDepartmentAction implements Controller {
         final String updatableName = req.getParameter("updatableName");
         final ValidationResult validationResult = validator.validate(department, updatableName);
         if (validationResult.hasError()) {
-            /*processError(req, resp, department, validationResult);*/
-            req.setAttribute("listerrors", validationResult.getErrorMessage());
+            req.setAttribute("errors", validationResult.getErrorMessage());
             req.setAttribute("department", department);
             throw new ValidationException("error");
         }
-
         departmentService.update(department);
-/*
-        final ModelAndView modelAndView = new ModelAndView("/");
-        return modelAndView;
-    */
     }
-
 
     private Department getDepartment(HttpServletRequest req, long departmentId) throws ServiceException {
         final Department departmentById = departmentService.getById(departmentId);
@@ -46,16 +39,4 @@ public class UpdateDepartmentAction implements Controller {
         departmentById.setComments(req.getParameter("comments"));
         return departmentById;
     }
-
-   /* private void processError(HttpServletRequest req, HttpServletResponse resp, Department department, ValidationResult validationResult) throws ServletException, IOException {
-        req.setAttribute("errors", validationResult.getErrorMessage());
-        req.setAttribute("department", department);
-        req.getRequestDispatcher("update-department-page.jsp").forward(req, resp);
-    }
-
-    private void update(HttpServletRequest req, HttpServletResponse resp, long departmentId, Department department) throws IOException, ServiceException {
-        departmentService.update(department);
-        req.setAttribute("successMessage", "Department with id: " + departmentId + " updated!");
-        resp.sendRedirect("manage-departments-page");
-    }*/
 }

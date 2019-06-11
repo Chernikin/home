@@ -2,9 +2,9 @@ package com.aimprosoft.kmb.domain;
 
 import java.util.Objects;
 
-public class Department {
+public class Department implements Entity<Long> {
 
-    private long id;
+    private Long id;
     private String departmentName;
     private String comments;
 
@@ -16,11 +16,13 @@ public class Department {
         this.comments = comments;
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    @Override
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -44,10 +46,10 @@ public class Department {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Department that = (Department) o;
-        return id == that.id &&
-                Objects.equals(departmentName, that.departmentName) &&
-                Objects.equals(comments, that.comments);
+        Department department = (Department) o;
+        return Objects.equals(id, department.id) &&
+                Objects.equals(departmentName, department.departmentName) &&
+                Objects.equals(comments, department.comments);
     }
 
     @Override

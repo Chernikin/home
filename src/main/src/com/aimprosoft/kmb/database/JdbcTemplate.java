@@ -1,5 +1,6 @@
 package com.aimprosoft.kmb.database;
 
+import com.aimprosoft.kmb.domain.Entity;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
@@ -11,23 +12,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JdbcTemplate<T> {
+public class JdbcTemplate<T extends Entity, R> {
 
     private static Logger logger = Logger.getLogger(JdbcTemplate.class);
-
 
     public void create(String sql, List<Object> params, String log) throws RepositoryException {
         getLogicForUpdate(sql, params, log);
     }
 
-    public T getById(String sql, long id, RowMapper<T> rowMapper) throws RepositoryException {
+    public T getById(String sql, R id, RowMapper<T> rowMapper) throws RepositoryException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         T result = null;
         try {
             connection = DatabaseConnectionManager.getConnection();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, id);
+            preparedStatement.setObject(1, id);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 result = rowMapper.extract(resultSet);
@@ -140,14 +140,14 @@ public class JdbcTemplate<T> {
     }
 
 
-    public void deleteById(String sql, long id) throws RepositoryException {
+    public void deleteById(String sql, R id) throws RepositoryException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             connection = DatabaseConnectionManager.getConnection();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, id);
+            preparedStatement.setObject(1, id);
             preparedStatement.executeUpdate();
             DatabaseConnectionManager.commit(connection);
         } catch (SQLException e) {

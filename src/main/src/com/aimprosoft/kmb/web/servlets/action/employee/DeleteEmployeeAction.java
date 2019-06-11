@@ -19,14 +19,7 @@ public class DeleteEmployeeAction implements Controller {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
         req.setAttribute("successMessage", "Employee with id: " + employeeId + " delete!");
-        req.setAttribute("departmentId", departmentId);
+        req.setAttribute("dataForRedirect", "?departmentId=" + departmentId);
         employeeService.deleteById(employeeId);
-
-      /*  final ModelAndView modelAndView = new ModelAndView("/manage-employees");
-        modelAndView.addModelData("successMessage", "Employee with id: " + employeeId + " delete!");
-        modelAndView.addModelData("departmentId", departmentId);
-        return modelAndView;*/
-
-        /*resp.sendRedirect("manage-employees-page?departmentId=" + departmentId);*/
     }
 }

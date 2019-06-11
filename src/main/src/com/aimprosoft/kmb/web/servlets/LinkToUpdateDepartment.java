@@ -24,11 +24,5 @@ public class LinkToUpdateDepartment implements Controller {
         req.setAttribute("department", departmentById);
         req.setAttribute("updatableName", departmentName);
         req.setAttribute("departmentId", departmentId);
-
-    /*    final ModelAndView modelAndView = new ModelAndView("/update-department-page.jsp");
-        modelAndView.addModelData("department", departmentById);
-        modelAndView.addModelData("departmentId", departmentId);
-       return modelAndView;
-    */
     }
 }
