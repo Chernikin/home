@@ -1,7 +1,9 @@
 package com.aimprosoft.kmb.database;
 
 import com.aimprosoft.kmb.domain.Entity;
+import com.aimprosoft.kmb.exceptions.ConnectionException;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
 
@@ -36,10 +38,13 @@ public class JdbcTemplate<T extends Entity, R> {
         } catch (SQLException e) {
             logger.error("Can`t get by id: " + id, e);
             throw new RepositoryException("Can`t get by id", e);
+        } catch (NullPointerException e) {
+            throw new ConnectionException("test", e);
         } finally {
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -67,8 +72,9 @@ public class JdbcTemplate<T extends Entity, R> {
             throw new RepositoryException("Can`t get all", e);
         } finally {
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -99,8 +105,9 @@ public class JdbcTemplate<T extends Entity, R> {
             throw new RepositoryException("Can`t get logic", e);
         } finally {
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -129,8 +136,9 @@ public class JdbcTemplate<T extends Entity, R> {
             throw new RepositoryException("Can`t check items on exist", e);
         } finally {
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -156,8 +164,9 @@ public class JdbcTemplate<T extends Entity, R> {
             throw new RepositoryException("Can`t delete", e);
         } finally {
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }

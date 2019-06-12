@@ -12,24 +12,26 @@
     <title>Update Department Page</title>
 </head>
 <body>
-<h3>Updating department with id: ${department.id}</h3>
 <form action="update-department" method="post">
     <table>
         <tr>
             <td>Department name</td>
-            <td><input type="text" name="departmentName" value="${department.departmentName}"></td>
+            <td><input type="text" name="departmentName"
+                       value="<c:choose><c:when test="${department != null}">${department.departmentName}</c:when>
+<c:otherwise>${errors.incorrectDepartmentData.departmentName}</c:otherwise></c:choose>"></td>
             <td><c:out value="${errors.departmentName}"> </c:out></td>
         </tr>
         <tr>
             <td>Comments</td>
-            <td><input type="text" name="comments" value="${department.comments}"></td>
+            <td><input type="text" name="comments"
+                       value="<c:choose><c:when test="${department != null}">${department.comments}</c:when>
+<c:otherwise>${errors.incorrectDepartmentData.comments}</c:otherwise></c:choose>"></td>
             <td><c:out value="${errors.comments}"> </c:out></td>
         </tr>
         <tr>
             <td>
                 <button type="submit">Update</button>
-                <input type="hidden" name="departmentId" value="${department.id}">
-                <input type="hidden" name="updatableName" value="${updatableName}">
+                <input type="hidden" name="departmentId" value="${departmentId}">
             </td>
         </tr>
         <tr>

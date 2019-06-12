@@ -17,23 +17,16 @@ import java.io.IOException;
 public class UpdateDepartmentAction implements Controller {
 
     private DepartmentService departmentService = new DepartmentService();
-    private Validator<Department> validator = new DepartmentValidator();
 
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
+        req.setAttribute("departmentId", departmentId);
         final Department department = getDepartment(req, departmentId);
-        final String updatableName = req.getParameter("updatableName");
-        final ValidationResult validationResult = validator.validate(department, updatableName);
-        if (validationResult.hasError()) {
-            req.setAttribute("errors", validationResult.getErrorMessage());
-            req.setAttribute("department", department);
-            throw new ValidationException("error");
-        }
         departmentService.update(department);
     }
 
-    private Department getDepartment(HttpServletRequest req, long departmentId) throws ServiceException {
+    private Department getDepartment(HttpServletRequest req, Long departmentId) throws ServiceException {
         final Department departmentById = departmentService.getById(departmentId);
         departmentById.setDepartmentName(req.getParameter("departmentName"));
         departmentById.setComments(req.getParameter("comments"));

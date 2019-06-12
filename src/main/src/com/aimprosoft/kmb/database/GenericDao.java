@@ -2,6 +2,7 @@ package com.aimprosoft.kmb.database;
 
 import com.aimprosoft.kmb.domain.Entity;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 
 import java.util.List;
 

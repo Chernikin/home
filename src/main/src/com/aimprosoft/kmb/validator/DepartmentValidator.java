@@ -17,15 +17,17 @@ public class DepartmentValidator implements Validator<Department> {
     @Override
     public ValidationResult validate(Department department, String updatableName) {
         final ValidationResult validationResult = new ValidationResult();
-
         if (!validateDepartmentName(department)) {
-            validationResult.addErrorMessage("departmentName", "Department name is not valid. Department name cannot be empty or more than 50 characters.");
+            validationResult.addError("departmentName", "Department name is not valid. Department name cannot be empty or more than 50 characters.");
         }
         if (!validateDepartmentNameExist(department, updatableName)) {
-            validationResult.addErrorMessage("departmentName", "Department name is not valid. This name is already used!");
+            validationResult.addError("departmentName", "Department name is not valid. This name is already used!");
         }
         if (!validateComments(department)) {
-            validationResult.addErrorMessage("comments", "Comments is not valid. Comments cannot be more than 1000 characters.");
+            validationResult.addError("comments", "Comments is not valid. Comments cannot be more than 1000 characters.");
+        }
+        if (validationResult.hasError()) {
+            validationResult.addError("incorrectDepartmentData", department);
         }
         return validationResult;
     }

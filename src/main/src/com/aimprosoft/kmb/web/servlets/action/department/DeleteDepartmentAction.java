@@ -19,7 +19,7 @@ public class DeleteDepartmentAction implements Controller {
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
 
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        employeeService.deleteAllFromDepartment(departmentId);
+
         departmentService.deleteById(departmentId);
     }
 }

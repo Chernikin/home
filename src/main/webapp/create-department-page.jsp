@@ -17,12 +17,12 @@
     <table>
         <tr>
             <td>Department name</td>
-            <td><input value="${incorrectDepartmentData.departmentName}" type="text" name="departmentName"></td>
+            <td><input value="${errors.incorrectDepartmentData.departmentName}" type="text" name="departmentName"></td>
             <td><c:out value="${errors.departmentName}"> </c:out></td>
         </tr>
         <tr>
             <td>Comments</td>
-            <td><input value="${incorrectDepartmentData.comments}" type="text" name="comments"></td>
+            <td><input value="${errors.incorrectDepartmentData.comments}" type="text" name="comments"></td>
             <td><c:out value="${errors.comments}"> </c:out></td>
         </tr>
         <tr>

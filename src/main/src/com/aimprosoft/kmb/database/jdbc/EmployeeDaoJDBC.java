@@ -4,6 +4,7 @@ import com.aimprosoft.kmb.database.DatabaseConnectionManager;
 import com.aimprosoft.kmb.database.EmployeeDao;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.rowMapper.EmployeeRowMapper;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
@@ -79,15 +80,15 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee, Long> implements 
             return employees;
         } catch (SQLException e) {
             logger.error("Can`t get all employees from department with id: " + id, e);
-            throw new RepositoryException("Can`t get all employees");
+            throw new RepositoryException("Can`t get all employees", e);
         } finally {
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 logger.error("Can`t closed statement.");
             }
-
             DatabaseConnectionManager.closeConnection(connection);
         }
     }
@@ -103,13 +104,14 @@ public class EmployeeDaoJDBC extends AbstractDaoJDBC<Employee, Long> implements 
             preparedStatement.executeUpdate();
             DatabaseConnectionManager.commit(connection);
         } catch (SQLException e) {
-            logger.error("Can`t delete", e);
+            logger.error("Can`t delete all from department", e);
             DatabaseConnectionManager.rollback(connection);
-            throw new RepositoryException("Can`t delete");
+            throw new RepositoryException("Can`t delete all from department", e);
         } finally {
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 logger.error("Can`t closed statement.");
             }

@@ -35,7 +35,7 @@ public class CreateEmployeeAction implements Controller {
         String updatableEmail = "validateEmail";
         final ValidationResult validationResult = validator.validate(employee, updatableEmail);
         if (validationResult.hasError()) {
-            req.setAttribute("errors", validationResult.getErrorMessage());
+            req.setAttribute("errors", validationResult.getError());
             req.setAttribute("incorrectEmployeeData", employee);
             req.setAttribute("departmentId", departmentId);
             throw new ValidationException("error");

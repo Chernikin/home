@@ -35,7 +35,7 @@ public class UpdateEmployeeAction implements Controller {
         final String updatableEmail = req.getParameter("updatableEmail");
         final ValidationResult validationResult = validator.validate(employee, updatableEmail);
         if (validationResult.hasError()) {
-            req.setAttribute("errors", validationResult.getErrorMessage());
+            req.setAttribute("errors", validationResult.getError());
             req.setAttribute("employee", employee);
             req.setAttribute("allDepartments", allDepartments);
             throw new ValidationException("error");

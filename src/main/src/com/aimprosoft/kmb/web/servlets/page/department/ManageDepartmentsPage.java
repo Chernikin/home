@@ -22,9 +22,6 @@ public class ManageDepartmentsPage implements Controller {
         allDepartments = departmentService.getAll();
         req.setAttribute("allDepartments", allDepartments);
 
-    /*    final ModelAndView modelAndView = new ModelAndView("/manage-departments-page.jsp");
-        modelAndView.addModelData("departments", allDepartments);
-        return modelAndView;
-    */
+
     }
 }

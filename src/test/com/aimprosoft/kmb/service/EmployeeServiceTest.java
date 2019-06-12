@@ -20,7 +20,7 @@ public class EmployeeServiceTest {
         final EmployeeService employeeService = new EmployeeService();
         final Employee employee = new Employee();
         final DepartmentService departmentService = new DepartmentService();
-        final Department departmentById = departmentService.getById(9);
+        final Department departmentById = departmentService.getById(9L);
         employee.setFirstName("TestNewItems firstname");
         employee.setLastName("TestNewItems lastname");
         employee.setEmail("Testemail@gmail.com");
@@ -38,7 +38,7 @@ public class EmployeeServiceTest {
         final EmployeeService employeeService = new EmployeeService();
         final Employee employeeById = employeeService.getById(6L);
         final DepartmentService departmentService = new DepartmentService();
-        final Department departmentById = departmentService.getById(1);
+        final Department departmentById = departmentService.getById(1L);
         employeeById.setFirstName("NEW NEW UPDATED");
         employeeById.setLastName("TestNewItems lastname");
         employeeById.setEmail("Testemail@gmail.com");

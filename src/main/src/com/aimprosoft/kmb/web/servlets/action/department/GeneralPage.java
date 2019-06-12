@@ -1,6 +1,8 @@
 package com.aimprosoft.kmb.web.servlets.action.department;
 
+import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.web.servlets.LinkToUpdateDepartment;
 import com.aimprosoft.kmb.web.servlets.LinkToUpdateEmployee;
 import com.aimprosoft.kmb.web.servlets.action.PageMapping;
@@ -46,6 +48,7 @@ public class GeneralPage extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+
         final PageMapping mapping = uriMappings.get(req.getRequestURI());
 
         try {
@@ -61,9 +64,13 @@ public class GeneralPage extends HttpServlet {
                     resp.sendRedirect(mapping.getJsp());
                 }
             }
-        } catch (ServiceException e) {
+        } catch (ValidationException e) {
             logger.error("Data is not valid!");
+            req.setAttribute("errors", e.getErrors());
             req.getRequestDispatcher(mapping.getRedirect()).forward(req, resp);
+        } catch (ServiceException e) {
+            logger.error("Can`t establish connection with database.");
+            throw new ServletException();
         }
     }
 }

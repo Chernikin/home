@@ -4,6 +4,7 @@ import com.aimprosoft.kmb.database.GenericDao;
 import com.aimprosoft.kmb.database.JdbcTemplate;
 import com.aimprosoft.kmb.domain.Entity;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 
 import java.util.List;

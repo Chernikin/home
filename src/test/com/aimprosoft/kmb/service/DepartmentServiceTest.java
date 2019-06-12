@@ -23,7 +23,7 @@ public class DepartmentServiceTest {
     @Test
     public void returnDepartmentIfDepartmentUpdated() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
-        final Department departmentById = departmentService.getById(3);
+        final Department departmentById = departmentService.getById(3L);
         departmentById.setDepartmentName("NEW TEST NAME");
         final Department department = departmentService.update(departmentById);
         assertNotNull(department);
@@ -33,7 +33,7 @@ public class DepartmentServiceTest {
     @Test
     public void returnNullIfDepartmentDeleteFromData() throws ServiceException {
         final DepartmentService departmentService = new DepartmentService();
-        departmentService.deleteById(3);
+        departmentService.deleteById(3L);
     }
 
 

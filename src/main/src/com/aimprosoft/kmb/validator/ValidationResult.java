@@ -6,18 +6,18 @@ import java.util.Map;
 
 public class ValidationResult {
 
-    private Map<String, String> errorMessage = new HashMap<>();
+    private Map<String, Object> error = new HashMap<>();
 
-    public void addErrorMessage(String field, String message) {
+    public void addError(String field, Object message) {
 
-        errorMessage.put(field, message);
+        error.put(field, message);
     }
 
     public boolean hasError() {
-        return !errorMessage.isEmpty();
+        return !error.isEmpty();
     }
 
-    public Map<String, String> getErrorMessage() {
-        return errorMessage;
+    public Map<String, Object> getError() {
+        return error;
     }
 }

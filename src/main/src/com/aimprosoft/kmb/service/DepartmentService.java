@@ -4,6 +4,10 @@ import com.aimprosoft.kmb.database.DepartmentDao;
 import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJDBC;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ValidationException;
+import com.aimprosoft.kmb.validator.DepartmentValidator;
+import com.aimprosoft.kmb.validator.ValidationResult;
+import com.aimprosoft.kmb.validator.Validator;
 
 import java.util.List;
 
@@ -11,14 +15,18 @@ public class DepartmentService {
 
 
     private final DepartmentDao departmentDao = new DepartmentDaoJDBC();
-
+    private final Validator<Department> validator = new DepartmentValidator();
+    private final EmployeeService employeeService = new EmployeeService();
 
     public void create(Department department) throws ServiceException {
+        final ValidationResult validateResult = validator.validate(department, "validateName");
+        if (validateResult.hasError()) {
+            throw new ValidationException(validateResult.getError());
+        }
         departmentDao.create(department);
     }
 
-
-    public Department getById(long id) throws ServiceException {
+    public Department getById(Long id) throws ServiceException {
         return departmentDao.getById(id);
     }
 
@@ -27,12 +35,18 @@ public class DepartmentService {
     }
 
     public Department update(Department department) throws ServiceException {
+        final ValidationResult validateResult = validator.validate(department, department.getDepartmentName());
+        if (validateResult.hasError()) {
+            throw new ValidationException(validateResult.getError());
+        }
         return departmentDao.update(department);
     }
 
-    public void deleteById(long id) throws ServiceException {
+    public void deleteById(Long id) throws ServiceException {
+        employeeService.deleteAllFromDepartment(id);
         departmentDao.deleteById(id);
     }
+
 
 }
 
