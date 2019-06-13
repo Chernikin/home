@@ -1,6 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action.employee;
 
-import com.aimprosoft.kmb.conroller.Controller;
+import com.aimprosoft.kmb.web.conroller.Controller;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;

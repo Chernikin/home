@@ -1,6 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.action;
 
-import com.aimprosoft.kmb.conroller.Controller;
+import com.aimprosoft.kmb.web.conroller.Controller;
 
 public class PageMapping {
 

@@ -3,8 +3,8 @@ package com.aimprosoft.kmb.database.jdbc;
 import com.aimprosoft.kmb.database.DepartmentDao;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
-import com.aimprosoft.kmb.rowMapper.DepartmentRowMapper;
-import com.aimprosoft.kmb.rowMapper.RowMapper;
+import com.aimprosoft.kmb.database.rowMapper.DepartmentRowMapper;
+import com.aimprosoft.kmb.database.rowMapper.RowMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,27 +15,27 @@ public class DepartmentDaoJDBC extends AbstractDaoJDBC<Department, Long> impleme
     private DepartmentRowMapper departmentRowMapper = new DepartmentRowMapper();
 
     @Override
-    protected final String CREATE() {
+    protected final String getQueryForCreate() {
         return "INSERT INTO departments(department_name, comments) VALUES (?, ?)";
     }
 
     @Override
-    protected final String GET_BY_ID() {
+    protected final String getQueryForGetById() {
         return "SELECT * FROM departments WHERE id = ?";
     }
 
     @Override
-    protected String UPDATE() {
-        return " UPDATE departments SET department_name = ?, comments = ? WHERE id = ?";
+    protected String getQueryForUpdate() {
+        return "UPDATE departments SET department_name = ?, comments = ? WHERE id = ?";
     }
 
     @Override
-    protected String ALL() {
+    protected String getQueryForGetAll() {
         return "SELECT * FROM departments";
     }
 
     @Override
-    protected String DELETE() {
+    protected String getQueryForDeleteById() {
         return "DELETE FROM departments WHERE id = ?";
     }
 
@@ -48,7 +48,7 @@ public class DepartmentDaoJDBC extends AbstractDaoJDBC<Department, Long> impleme
     }
 
     @Override
-    protected RowMapper<Department> rowMapper() {
+    protected RowMapper<Department> getRowMapper() {
         return departmentRowMapper;
     }
 
@@ -57,7 +57,7 @@ public class DepartmentDaoJDBC extends AbstractDaoJDBC<Department, Long> impleme
         String sql = CHECK_ON_EXIST;
         List<Object> params = new ArrayList<>();
         params.add(department.getDepartmentName());
-        String log = "Can`t check the existence same name of the department";
+        String log = "Can`t check the existence same name of the department.";
         return getJdbcTemplate().isExist(sql, params, log);
     }
 

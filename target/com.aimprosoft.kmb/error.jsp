@@ -13,8 +13,12 @@
 <body>
 
 <h3>Sorry, an error is happened!</h3>
-<div>Error: <%=exception.getMessage() + " Reason: " + exception.getCause()%>
+<%--<div>Error: <%=exception.getMessage() + " Reason: " + exception.getCause()%>--%>
+<%--</div>--%>
+<div>
+    Error: ${exception.getMessage()} Reason: ${exception.getCause()}
 </div>
+
 <button type="button" name="back" onclick="history.back()"><b>back</b></button>
 <button><a href="/">Main page</a></button>
 </body>

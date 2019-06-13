@@ -1,4 +1,4 @@
-package com.aimprosoft.kmb.rowMapper;
+package com.aimprosoft.kmb.database.rowMapper;
 
 import com.aimprosoft.kmb.domain.Department;
 

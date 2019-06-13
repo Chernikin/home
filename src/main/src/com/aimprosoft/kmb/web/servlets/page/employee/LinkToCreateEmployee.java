@@ -1,6 +1,6 @@
 package com.aimprosoft.kmb.web.servlets.page.employee;
 
-import com.aimprosoft.kmb.conroller.Controller;
+import com.aimprosoft.kmb.web.conroller.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

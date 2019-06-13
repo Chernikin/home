@@ -1,8 +1,8 @@
-package com.aimprosoft.kmb.database;
+package com.aimprosoft.kmb.database.jdbc;
 
+import com.aimprosoft.kmb.database.rowMapper.RowMapper;
 import com.aimprosoft.kmb.domain.Entity;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
-import com.aimprosoft.kmb.rowMapper.RowMapper;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -21,40 +21,54 @@ public class JdbcTemplate<T extends Entity, R> {
     }
 
     public T getById(String sql, R id, RowMapper<T> rowMapper) throws RepositoryException {
-        Connection connection = null;
+//        Connection connection = null;
         PreparedStatement preparedStatement = null;
         T result = null;
         try {
-            connection = DatabaseConnectionManager.getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setObject(1, id);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                result = rowMapper.extract(resultSet);
+            try (Connection connection = DatabaseConnectionManager.getConnection()) {
+//                connection = DatabaseConnectionManager.getConnection();
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setObject(1, id);
+                final ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    result = rowMapper.extract(resultSet);
+                }
             }
-            resultSet.close();
         } catch (SQLException e) {
             logger.error("Can`t get by id: " + id, e);
             throw new RepositoryException("Can`t get by id", e);
-        } finally {
-            try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DatabaseConnectionManager.closeConnection(connection);
         }
+//        try {
+//            connection = DatabaseConnectionManager.getConnection();
+//            preparedStatement = connection.prepareStatement(sql);
+//            preparedStatement.setObject(1, id);
+//            final ResultSet resultSet = preparedStatement.executeQuery();
+//            if (resultSet.next()) {
+//                result = rowMapper.extract(resultSet);
+//            }
+//            resultSet.close();
+//        } catch (SQLException e) {
+//            logger.error("Can`t get by id: " + id, e);
+//            throw new RepositoryException("Can`t get by id", e);
+//        } finally {
+//            try {
+//                if (preparedStatement != null) {
+//                    preparedStatement.close();
+//                }
+//            } catch (SQLException e) {
+//                logger.error("Can`t closed statement.");
+//            }
+//            DatabaseConnectionManager.closeConnection(connection);
+//        }
         return result;
     }
 
 
     public List<T> getAll(String sql, RowMapper<T> rowMapper) throws RepositoryException {
-        Connection connection = null;
+//        Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try {
-            connection = DatabaseConnectionManager.getConnection();
+        try (Connection connection = DatabaseConnectionManager.getConnection()) {
+//            connection = DatabaseConnectionManager.getConnection();
             preparedStatement = connection.prepareStatement(sql);
             final ResultSet resultSet = preparedStatement.executeQuery();
             final List<T> all = new ArrayList<>();
@@ -66,15 +80,15 @@ public class JdbcTemplate<T extends Entity, R> {
         } catch (SQLException e) {
             logger.error("Can`t get all", e);
             throw new RepositoryException("Can`t get all", e);
-        } finally {
-            try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            DatabaseConnectionManager.closeConnection(connection);
+//        } finally {
+//            try {
+//                if (preparedStatement != null) {
+//                    preparedStatement.close();
+//                }
+//            } catch (SQLException e) {
+//                logger.error("Can`t closed statement.");
+//            }
+//            DatabaseConnectionManager.closeConnection(connection);
         }
     }
 
@@ -105,7 +119,7 @@ public class JdbcTemplate<T extends Entity, R> {
                     preparedStatement.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Can`t closed statement.");
             }
         }
         DatabaseConnectionManager.closeConnection(connection);
@@ -136,7 +150,7 @@ public class JdbcTemplate<T extends Entity, R> {
                     preparedStatement.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Can`t closed statement.");
             }
         }
         DatabaseConnectionManager.closeConnection(connection);
@@ -164,7 +178,7 @@ public class JdbcTemplate<T extends Entity, R> {
                     preparedStatement.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Can`t closed statement.");
             }
             DatabaseConnectionManager.closeConnection(connection);
         }

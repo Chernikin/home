@@ -1,4 +1,4 @@
-package com.aimprosoft.kmb.database;
+package com.aimprosoft.kmb.database.jdbc;
 
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import org.apache.log4j.Logger;

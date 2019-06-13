@@ -1,4 +1,4 @@
-package com.aimprosoft.kmb.conroller;
+package com.aimprosoft.kmb.web.conroller;
 
 import com.aimprosoft.kmb.exceptions.ServiceException;
 

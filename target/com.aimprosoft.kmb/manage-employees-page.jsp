@@ -22,7 +22,7 @@
             <td colspan="10">
                 <button type="submit"><a href="link-to-create-employee?departmentId=${departmentId}"><b>Create
                     employee</b></a></button>
-                <%--    <button><a href="create-employee-page.jsp?departmentId=${employee.department.id}"><b>Create Employee</b></a></button>
+                <%--    <button><a href="getQueryForCreate-employee-page.jsp?departmentId=${employee.department.id}"><b>Create Employee</b></a></button>
                 --%></td>
         </tr>
         <tr>

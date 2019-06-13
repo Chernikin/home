@@ -33,18 +33,17 @@ public class GeneralPage extends HttpServlet {
     @Override
     public void init() {
         uriMappings.put("/", new PageMapping(new ManageDepartmentsPage(), "GET", "/manage-departments-page.jsp", null));
-        uriMappings.put("/add-department", new PageMapping(new CreateDepartmentAction(), "POST", "/", "/create-department-page.jsp"));
-        uriMappings.put("/link-to-update-department", new PageMapping(new LinkToUpdateDepartment(), "GET", "/update-department-page.jsp", null));
-        uriMappings.put("/update-department", new PageMapping(new UpdateDepartmentAction(), "POST", "/", "/update-department-page.jsp"));
+        uriMappings.put("/add-department", new PageMapping(new CreateDepartmentAction(), "POST", "/", "/getQueryForCreate-department-page.jsp"));
+        uriMappings.put("/link-to-getQueryForUpdate-department", new PageMapping(new LinkToUpdateDepartment(), "GET", "/getQueryForUpdate-department-page.jsp", null));
+        uriMappings.put("/getQueryForUpdate-department", new PageMapping(new UpdateDepartmentAction(), "POST", "/", "/getQueryForUpdate-department-page.jsp"));
         uriMappings.put("/delete-department", new PageMapping(new DeleteDepartmentAction(), "POST", "/", null));
         uriMappings.put("/manage-employees", new PageMapping(new ManageEmployeesPage(), "GET", "/manage-employees-page.jsp", null));
-        uriMappings.put("/link-to-create-employee", new PageMapping(new LinkToCreateEmployee(), "GET", "/create-employee-page.jsp", null));
-        uriMappings.put("/add-employee", new PageMapping(new CreateEmployeeAction(), "POST", "/manage-employees", "/create-employee-page.jsp"));
-        uriMappings.put("/link-to-update-employee", new PageMapping(new LinkToUpdateEmployee(), "GET", "/update-employee-page.jsp", null));
-        uriMappings.put("/update-employee", new PageMapping(new UpdateEmployeeAction(), "POST", "/manage-employees", "/update-employee-page.jsp"));
+        uriMappings.put("/link-to-getQueryForCreate-employee", new PageMapping(new LinkToCreateEmployee(), "GET", "/getQueryForCreate-employee-page.jsp", null));
+        uriMappings.put("/add-employee", new PageMapping(new CreateEmployeeAction(), "POST", "/manage-employees", "/getQueryForCreate-employee-page.jsp"));
+        uriMappings.put("/link-to-getQueryForUpdate-employee", new PageMapping(new LinkToUpdateEmployee(), "GET", "/getQueryForUpdate-employee-page.jsp", null));
+        uriMappings.put("/getQueryForUpdate-employee", new PageMapping(new UpdateEmployeeAction(), "POST", "/manage-employees", "/getQueryForUpdate-employee-page.jsp"));
         uriMappings.put("/delete-employee", new PageMapping(new DeleteEmployeeAction(), "POST", "/manage-employees", null));
     }
-
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,21 +57,25 @@ public class GeneralPage extends HttpServlet {
                 req.getRequestDispatcher(mapping.getJsp()).forward(req, resp);
             }
             if (mapping.getMethod().equals("POST")) {
-                final Object dataForRedirect = req.getAttribute("dataForRedirect");
-                if (dataForRedirect != null) {
-                    resp.sendRedirect(mapping.getJsp() + dataForRedirect);
-                } else {
-                    resp.sendRedirect(mapping.getJsp());
-                }
+                getLogicForPost(req, resp, mapping);
             }
         } catch (ValidationException e) {
-            logger.error("Data is not valid!");
+            logger.debug("Data is not valid!");
             req.setAttribute("errors", e.getErrors());
             req.getRequestDispatcher(mapping.getRedirect()).forward(req, resp);
         } catch (ApplicationException e) {
             logger.error("Can`t establish connection with database.");
-            throw new ServletException(e);
+            req.setAttribute("exception", e);
+            req.getRequestDispatcher("error.jsp").forward(req, resp);
+        }
+    }
 
+    private void getLogicForPost(HttpServletRequest req, HttpServletResponse resp, PageMapping mapping) throws IOException {
+        final Object dataForRedirect = req.getAttribute("dataForRedirect");
+        if (dataForRedirect != null) {
+            resp.sendRedirect(mapping.getJsp() + dataForRedirect);
+        } else {
+            resp.sendRedirect(mapping.getJsp());
         }
     }
 }
