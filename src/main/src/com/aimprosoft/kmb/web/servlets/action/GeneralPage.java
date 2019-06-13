@@ -1,11 +1,12 @@
-package com.aimprosoft.kmb.web.servlets.action.department;
+package com.aimprosoft.kmb.web.servlets.action;
 
-import com.aimprosoft.kmb.exceptions.RepositoryException;
-import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ApplicationException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.web.servlets.LinkToUpdateDepartment;
 import com.aimprosoft.kmb.web.servlets.LinkToUpdateEmployee;
-import com.aimprosoft.kmb.web.servlets.action.PageMapping;
+import com.aimprosoft.kmb.web.servlets.action.department.CreateDepartmentAction;
+import com.aimprosoft.kmb.web.servlets.action.department.DeleteDepartmentAction;
+import com.aimprosoft.kmb.web.servlets.action.department.UpdateDepartmentAction;
 import com.aimprosoft.kmb.web.servlets.action.employee.CreateEmployeeAction;
 import com.aimprosoft.kmb.web.servlets.action.employee.DeleteEmployeeAction;
 import com.aimprosoft.kmb.web.servlets.action.employee.UpdateEmployeeAction;
@@ -68,9 +69,10 @@ public class GeneralPage extends HttpServlet {
             logger.error("Data is not valid!");
             req.setAttribute("errors", e.getErrors());
             req.getRequestDispatcher(mapping.getRedirect()).forward(req, resp);
-        } catch (ServiceException e) {
+        } catch (ApplicationException e) {
             logger.error("Can`t establish connection with database.");
-            throw new ServletException();
+            throw new ServletException(e);
+
         }
     }
 }

@@ -4,10 +4,8 @@ import com.aimprosoft.kmb.conroller.Controller;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.EmployeeService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 public class DeleteEmployeeAction implements Controller {
@@ -15,10 +13,9 @@ public class DeleteEmployeeAction implements Controller {
     private EmployeeService employeeService = new EmployeeService();
 
     @Override
-    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         final long departmentId = Long.parseLong(req.getParameter("departmentId"));
-        req.setAttribute("successMessage", "Employee with id: " + employeeId + " delete!");
         req.setAttribute("dataForRedirect", "?departmentId=" + departmentId);
         employeeService.deleteById(employeeId);
     }

@@ -7,10 +7,8 @@ import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.service.EmployeeService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 public class LinkToUpdateEmployee implements Controller {
@@ -19,13 +17,14 @@ public class LinkToUpdateEmployee implements Controller {
     private DepartmentService departmentService = new DepartmentService();
 
     @Override
-    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         Employee employeeById = employeeService.getById(employeeId);
-        final String email = employeeById.getEmail();
         final List<Department> allDepartments = departmentService.getAll();
+        final Long departmentId = employeeById.getDepartment().getId();
+        req.setAttribute("employeeId", employeeId);
+        req.setAttribute("departmentId", departmentId);
         req.setAttribute("employee", employeeById);
-        req.setAttribute("updatableEmail", email);
         req.setAttribute("allDepartments", allDepartments);
     }
 }

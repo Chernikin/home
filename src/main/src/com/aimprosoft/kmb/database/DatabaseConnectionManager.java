@@ -1,6 +1,6 @@
 package com.aimprosoft.kmb.database;
 
-import com.aimprosoft.kmb.exceptions.ConnectionException;
+import com.aimprosoft.kmb.exceptions.RepositoryException;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -19,11 +19,11 @@ public class DatabaseConnectionManager {
     private static String databaseUserName;
     private static String databasePassword;
 
-    private static void initDbProperties() throws ConnectionException {
+    private static void initDbProperties() throws RepositoryException {
         final Properties dbProperties = propertiesResolver.getProperties();
         if (dbProperties.isEmpty()) {
             logger.error("Database properties is empty.");
-            throw new ConnectionException("Database properties is empty.");
+            throw new RepositoryException("Database properties is empty.");
         }
 
         databaseDriver = dbProperties.getProperty("database.driver");
@@ -33,7 +33,7 @@ public class DatabaseConnectionManager {
     }
 
 
-    public static Connection getConnection() throws ConnectionException {
+    public static Connection getConnection() throws RepositoryException {
         initDbProperties();
         try {
             Class.forName(databaseDriver);
@@ -42,9 +42,9 @@ public class DatabaseConnectionManager {
             return connection;
         } catch (SQLException e) {
             logger.error("Can`t establish a new connection to the database");
-            throw new ConnectionException("Can`t establish connection with database. ", e);
+            throw new RepositoryException("Can`t establish connection with database. ", e);
         } catch (ClassNotFoundException e) {
-            throw new ConnectionException("Can`t find the jdbc driver", e);
+            throw new RepositoryException("Can`t find the jdbc driver", e);
         }
     }
 

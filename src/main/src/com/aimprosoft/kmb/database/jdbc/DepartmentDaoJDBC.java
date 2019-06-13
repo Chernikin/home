@@ -3,7 +3,6 @@ package com.aimprosoft.kmb.database.jdbc;
 import com.aimprosoft.kmb.database.DepartmentDao;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
-import com.aimprosoft.kmb.exceptions.ValidationException;
 import com.aimprosoft.kmb.rowMapper.DepartmentRowMapper;
 import com.aimprosoft.kmb.rowMapper.RowMapper;
 

@@ -1,4 +1,4 @@
-<%@ page import="com.aimprosoft.kmb.exceptions.ServiceException" %><%--
+<%@ page import="com.aimprosoft.kmb.exceptions.ApplicationException" %><%--
   Created by IntelliJ IDEA.
   User: user
   Date: 27.05.19

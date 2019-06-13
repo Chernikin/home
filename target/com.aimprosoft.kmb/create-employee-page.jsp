@@ -17,34 +17,34 @@
     <table>
         <tr>
             <td>First name</td>
-            <td><input value="${incorrectEmployeeData.firstName}" type="text" name="firstName"></td>
+            <td><input value="${errors.incorrectEmployeeData.firstName}" type="text" name="firstName"></td>
             <td><c:out value="${errors.firstName}"> </c:out></td>
         </tr>
         <tr>
             <td>Last name</td>
-            <td><input value="${incorrectEmployeeData.lastName}" type="text" name="lastName"></td>
+            <td><input value="${errors.incorrectEmployeeData.lastName}" type="text" name="lastName"></td>
             <td><c:out value="${errors.lastName}"> </c:out></td>
         </tr>
         <tr>
             <td>Email</td>
-            <td><input value="${incorrectEmployeeData.email}" type="text" name="email"></td>
+            <td><input value="${errors.incorrectEmployeeData.email}" type="text" name="email"></td>
             <td><c:out value="${errors.email}"> </c:out></td>
         </tr>
         <tr>
             <td>Age</td>
-            <td><input value="${incorrectEmployeeData.age}" type="text" name="age">
+            <td><input value="${errors.incorrectEmployeeData.age}" type="text" name="age">
             </td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
             <td>Phone number</td>
-            <td><input value="${incorrectEmployeeData.phoneNumber}" type="text" name="phoneNumber"></td>
+            <td><input value="${errors.incorrectEmployeeData.phoneNumber}" type="text" name="phoneNumber"></td>
             <td><c:out value="${errors.phoneNumber}"> </c:out></td>
         </tr>
         <tr>
             <td>Employment date</td>
             <td><input type="date" name="employmentDate"
-                       value="<fmt:formatDate value="${incorrectEmployeeData.employmentDate}" pattern="yyyy-MM-dd"/>"
+                       value="<fmt:formatDate value="${errors.incorrectEmployeeData.employmentDate}" pattern="yyyy-MM-dd"/>"
             ></td>
             <td><c:out value="${errors.employmentDate}"> </c:out></td>
         </tr>

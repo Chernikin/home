@@ -2,7 +2,7 @@ package com.aimprosoft.kmb.exceptions;
 
 import java.util.List;
 
-public class ServiceException extends Exception {
+public class ServiceException extends ApplicationException {
 
     public ServiceException() {
     }

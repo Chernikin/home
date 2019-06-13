@@ -19,9 +19,10 @@ public class DepartmentService {
     private final EmployeeService employeeService = new EmployeeService();
 
     public void create(Department department) throws ServiceException {
-        final ValidationResult validateResult = validator.validate(department, "validateName");
-        if (validateResult.hasError()) {
-            throw new ValidationException(validateResult.getError());
+
+        final ValidationResult validationResult = validator.validate(department, "validateName");
+        if (validationResult.hasError()) {
+            throw new ValidationException(validationResult.getError());
         }
         departmentDao.create(department);
     }
@@ -35,7 +36,10 @@ public class DepartmentService {
     }
 
     public Department update(Department department) throws ServiceException {
-        final ValidationResult validateResult = validator.validate(department, department.getDepartmentName());
+        final Department updatableDepartment = departmentDao.getById(department.getId());
+        final String updatableName = updatableDepartment.getDepartmentName();
+
+        final ValidationResult validateResult = validator.validate(department, updatableName);
         if (validateResult.hasError()) {
             throw new ValidationException(validateResult.getError());
         }
@@ -46,7 +50,6 @@ public class DepartmentService {
         employeeService.deleteAllFromDepartment(id);
         departmentDao.deleteById(id);
     }
-
 
 }
 

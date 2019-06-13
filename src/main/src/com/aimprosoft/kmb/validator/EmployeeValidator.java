@@ -4,6 +4,7 @@ import com.aimprosoft.kmb.database.EmployeeDao;
 import com.aimprosoft.kmb.database.jdbc.EmployeeDaoJDBC;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
 import org.apache.log4j.Logger;
 
@@ -65,7 +66,7 @@ public class EmployeeValidator implements Validator<Employee> {
         return email != null && !email.isEmpty() && email.contains("@") && email.contains(".") && email.length() <= MAX_EMAIL_LENGTH;
     }
 
-    private boolean validateEmailExist(Employee employee, String updatableEmail){
+    private boolean validateEmailExist(Employee employee, String updatableEmail) {
         if (updatableEmail.equals(employee.getEmail())) {
             return true;
         }

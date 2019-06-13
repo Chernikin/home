@@ -13,38 +13,53 @@
     <title>Update Employee Page</title>
 </head>
 <body>
-<h3>Updating employee with id: ${employee.id}</h3>
 <form action="update-employee" method="post">
     <table>
         <tr>
             <td>First name</td>
-            <td><input type="text" name="firstName" value="${employee.firstName}"></td>
+            <td><input type="text" name="firstName"
+                       value="<c:choose><c:when test="${employee != null}">${employee.firstName}</c:when>
+<c:otherwise>${errors.incorrectEmployeeData.firstName}</c:otherwise></c:choose>"></td>
             <td><c:out value="${errors.firstName}"> </c:out></td>
         </tr>
         <tr>
             <td>Last name</td>
-            <td><input type="text" name="lastName" value="${employee.lastName}"></td>
+            <td><input type="text" name="lastName"
+                       value="<c:choose><c:when test="${employee != null}">${employee.lastName}</c:when>
+<c:otherwise>${errors.incorrectEmployeeData.lastName}</c:otherwise></c:choose>"></td>
             <td><c:out value="${errors.lastName}"> </c:out></td>
         </tr>
         <tr>
             <td>Email</td>
-            <td><input type="text" name="email" value="${employee.email}"></td>
+            <td><input type="text" name="email"
+                       value="<c:choose><c:when test="${employee != null}">${employee.email}</c:when>
+<c:otherwise>${errors.incorrectEmployeeData.email}</c:otherwise></c:choose>"></td>
             <td><c:out value="${errors.email}"> </c:out></td>
         </tr>
         <tr>
             <td>Age</td>
-            <td><input type="text" name="age" value="${employee.age}"></td>
+            <td><input type="text" name="age"
+                       value="<c:choose><c:when test="${employee != null}">${employee.age}</c:when>
+<c:otherwise>${errors.incorrectEmployeeData.age}</c:otherwise></c:choose>"></td>
             <td><c:out value="${errors.age}"> </c:out></td>
         </tr>
         <tr>
             <td>Phone number</td>
-            <td><input type="text" name="phoneNumber" value="${employee.phoneNumber}"></td>
+            <td><input type="text" name="phoneNumber"
+                       value="<c:choose><c:when test="${employee != null}">${employee.phoneNumber}</c:when>
+<c:otherwise>${errors.incorrectEmployeeData.phoneNumber}</c:otherwise></c:choose>"></td>
             <td><c:out value="${errors.phoneNumber}"> </c:out></td>
         </tr>
         <tr>
             <td>Employment date</td>
             <td><input type="date" name="employmentDate"
-                       value="<fmt:formatDate value="${employee.employmentDate}" pattern="yyyy-MM-dd"/>"></td>
+            <c:choose>
+                       <c:when test="${employee != null}">value="<fmt:formatDate value="${employee.employmentDate}" pattern="yyyy-MM-dd"/>"
+            </c:when>
+                       <c:otherwise>value="<fmt:formatDate value="${errors.incorrectEmployeeData.employmentDate}" pattern="yyyy-MM-dd"/>"
+            </c:otherwise>
+            </c:choose>>
+            </td>
             <td><c:out value="${errors.employmentDate}"> </c:out></td>
         </tr>
         <tr>
@@ -53,7 +68,8 @@
                 <select name="newDepartmentId">
                     <c:forEach items="${allDepartments}" var="department">
                         <option value="${department.id}"
-                                <c:if test="${department.id eq employee.department.id}">selected="selected"</c:if>>${department.departmentName}</option>
+                                <c:if test="${department.id eq employee.department.id or department.id eq errors.incorrectEmployeeData.department.id}">
+                                    selected="selected"</c:if>>${department.departmentName}</option>
                     </c:forEach>
                 </select>
             </td>
@@ -61,9 +77,8 @@
         <tr>
             <td>
                 <button type="submit">Update</button>
-                <input type="hidden" name="employeeId" value="${employee.id}">
-                <input type="hidden" name="updatableEmail" value="${updatableEmail}">
-                <input type="hidden" name="departmentId" value="${employee.department.id}">
+                <input type="hidden" name="employeeId" value="${employeeId}">
+                <input type="hidden" name="departmentId" value="${departmentId}">
             </td>
         </tr>
         <tr>
