@@ -1,4 +1,4 @@
-<%@ page import="com.aimprosoft.kmb.exceptions.ApplicationException" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: user
   Date: 27.05.19
@@ -13,8 +13,6 @@
 <body>
 
 <h3>Sorry, an error is happened!</h3>
-<%--<div>Error: <%=exception.getMessage() + " Reason: " + exception.getCause()%>--%>
-<%--</div>--%>
 <div>
     Error: ${exception.getMessage()} Reason: ${exception.getCause()}
 </div>

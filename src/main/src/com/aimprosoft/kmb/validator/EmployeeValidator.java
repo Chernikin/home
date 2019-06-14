@@ -1,11 +1,9 @@
 package com.aimprosoft.kmb.validator;
 
 import com.aimprosoft.kmb.database.EmployeeDao;
-import com.aimprosoft.kmb.database.jdbc.EmployeeDaoJDBC;
+import com.aimprosoft.kmb.database.jdbc.EmployeeDaoJdbc;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
-import com.aimprosoft.kmb.exceptions.ServiceException;
-import com.aimprosoft.kmb.exceptions.ValidationException;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
@@ -17,7 +15,7 @@ public class EmployeeValidator implements Validator<Employee> {
     private static final int MAX_EMAIL_LENGTH = 50;
     private static final int MAX_AGE = 99;
     private static final int MAX_PHONE_NUMBER_LENGTH = 13;
-    private EmployeeDao employeeDao = new EmployeeDaoJDBC();
+    private EmployeeDao employeeDao = new EmployeeDaoJdbc();
     private static Logger logger = Logger.getLogger(EmployeeValidator.class);
 
 

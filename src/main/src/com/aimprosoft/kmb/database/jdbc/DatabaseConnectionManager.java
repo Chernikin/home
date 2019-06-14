@@ -18,12 +18,13 @@ public class DatabaseConnectionManager {
     private static String databaseUrl;
     private static String databaseUserName;
     private static String databasePassword;
+    private static String fileName = "connection.properties";
 
-    private static void initDbProperties() throws RepositoryException {
-        final Properties dbProperties = propertiesResolver.getProperties();
+    private static void initDbProperties(String fileName) throws RepositoryException {
+        final Properties dbProperties = propertiesResolver.getProperties(fileName);
         if (dbProperties.isEmpty()) {
-            logger.error("Database properties is empty.");
-            throw new RepositoryException("Database properties is empty.");
+            logger.error("Can`t get connection properties.");
+            throw new RepositoryException("Can`t get connection properties.");
         }
 
         databaseDriver = dbProperties.getProperty("database.driver");
@@ -34,51 +35,15 @@ public class DatabaseConnectionManager {
 
 
     public static Connection getConnection() throws RepositoryException {
-        initDbProperties();
+        initDbProperties(fileName);
         try {
             Class.forName(databaseDriver);
-            final Connection connection = DriverManager.getConnection(databaseUrl, databaseUserName, databasePassword);
-            connection.setAutoCommit(false);
-            return connection;
+            return DriverManager.getConnection(databaseUrl, databaseUserName, databasePassword);
         } catch (SQLException e) {
-            logger.error("Can`t establish a new connection to the database");
+            logger.error("Can`t establish a new connection to the database. ", e);
             throw new RepositoryException("Can`t establish connection with database. ", e);
         } catch (ClassNotFoundException e) {
-            throw new RepositoryException("Can`t find the jdbc driver", e);
+            throw new RepositoryException("Can`t find the jdbc driver. ", e);
         }
     }
-
-    public static void closeConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                logger.error("Can`t close the connection", e);
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void commit(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.commit();
-            } catch (SQLException e) {
-                logger.error("Can`t do commit", e);
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void rollback(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.rollback();
-            } catch (SQLException e) {
-                logger.error("Can`t do rollback", e);
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

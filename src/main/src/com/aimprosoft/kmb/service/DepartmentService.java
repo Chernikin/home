@@ -1,7 +1,7 @@
 package com.aimprosoft.kmb.service;
 
 import com.aimprosoft.kmb.database.DepartmentDao;
-import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJDBC;
+import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJdbc;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
@@ -13,8 +13,7 @@ import java.util.List;
 
 public class DepartmentService {
 
-
-    private final DepartmentDao departmentDao = new DepartmentDaoJDBC();
+    private final DepartmentDao departmentDao = new DepartmentDaoJdbc();
     private final Validator<Department> validator = new DepartmentValidator();
     private final EmployeeService employeeService = new EmployeeService();
 

@@ -1,7 +1,7 @@
 package com.aimprosoft.kmb.validator;
 
 import com.aimprosoft.kmb.database.DepartmentDao;
-import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJDBC;
+import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJdbc;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import org.apache.log4j.Logger;
@@ -10,7 +10,7 @@ public class DepartmentValidator implements Validator<Department> {
 
     private static final int DEP_NAME_MAX_LENGTH = 50;
     private static final int DEP_COMMENTS_MAX_LENGTH = 1000;
-    private DepartmentDao departmentDao = new DepartmentDaoJDBC();
+    private DepartmentDao departmentDao = new DepartmentDaoJdbc();
     private static Logger logger = Logger.getLogger(DepartmentValidator.class);
 
 
@@ -45,7 +45,7 @@ public class DepartmentValidator implements Validator<Department> {
             try {
                 return !departmentDao.isExists(department);
             } catch (RepositoryException e) {
-                logger.error("Can`t check department name on exist!");
+                logger.debug("Can`t check department name on exist!");
             }
         }
         return false;

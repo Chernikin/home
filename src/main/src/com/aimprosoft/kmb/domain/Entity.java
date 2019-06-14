@@ -1,8 +1,8 @@
 package com.aimprosoft.kmb.domain;
 
-public interface Entity<R> {
+public interface Entity<Id> {
 
-    R getId();
+    Id getId();
 
-    void setId(R id);
+    void setId(Id id);
 }
