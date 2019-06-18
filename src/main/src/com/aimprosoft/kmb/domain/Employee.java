@@ -17,6 +17,10 @@ public class Employee implements Entity<Long> {
     public Employee() {
     }
 
+    public Employee(String email) {
+        this.email = email;
+    }
+
     public Employee(String firstName, String lastName, String email, int age, String phoneNumber, Date employmentDate, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;

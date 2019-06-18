@@ -7,12 +7,16 @@ import com.aimprosoft.kmb.exceptions.RepositoryException;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class EmployeeValidator implements Validator<Employee> {
+
+    private final ValidationResult validationResult = new ValidationResult();
 
     private static final int MAX_FIRST_NAME_LENGTH = 25;
     private static final int MAX_LAST_NAME_LENGTH = 30;
     private static final int MAX_EMAIL_LENGTH = 50;
+    private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 99;
     private static final int MAX_PHONE_NUMBER_LENGTH = 13;
     private EmployeeDao employeeDao = new EmployeeDaoJdbc();
@@ -20,8 +24,7 @@ public class EmployeeValidator implements Validator<Employee> {
 
 
     @Override
-    public ValidationResult validate(Employee employee, String updatableEmail) {
-        final ValidationResult validationResult = new ValidationResult();
+    public ValidationResult validate(Employee employee, Employee updatableEmployee) {
         if (!validateFirstName(employee)) {
             validationResult.addError("firstName", "First name is not valid. First name cannot be empty or more than 25 characters.");
         }
@@ -31,7 +34,7 @@ public class EmployeeValidator implements Validator<Employee> {
         if (!validateEmail(employee)) {
             validationResult.addError("email", "E-mail is not valid. E-mail cannot be empty or more than 50 characters. Must contain '@' and '.' .");
         }
-        if (!validateEmailExist(employee, updatableEmail)) {
+        if (!validateEmailExist(employee, updatableEmployee)) {
             validationResult.addError("email", "E-mail is not valid. This e-mail is already used!");
         }
         if (!validateAge(employee)) {
@@ -64,11 +67,11 @@ public class EmployeeValidator implements Validator<Employee> {
         return email != null && !email.isEmpty() && email.contains("@") && email.contains(".") && email.length() <= MAX_EMAIL_LENGTH;
     }
 
-    private boolean validateEmailExist(Employee employee, String updatableEmail) {
-        if (updatableEmail.equals(employee.getEmail())) {
+    private boolean validateEmailExist(Employee employee, Employee updatableEmployee) {
+        if (updatableEmployee.getEmail().equals(employee.getEmail())) {
             return true;
         }
-        if (!updatableEmail.equals(employee.getEmail())) {
+        if (!updatableEmployee.getEmail().equals(employee.getEmail())) {
             try {
                 return !employeeDao.isExists(employee);
             } catch (RepositoryException e) {
@@ -80,7 +83,7 @@ public class EmployeeValidator implements Validator<Employee> {
 
     private boolean validateAge(Employee employee) {
         final int age = employee.getAge();
-        return age >= 18 && age <= MAX_AGE;
+        return age >= MIN_AGE && age <= MAX_AGE;
     }
 
     private boolean validatePhoneNumber(Employee employee) {

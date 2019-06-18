@@ -1,5 +1,5 @@
-CREATE DATABASE if not exists com.aimprosoft.kmb;
-USE com.aimprosoft.kmb;
+CREATE DATABASE if not exists kmb;
+USE kmb;
 
 CREATE TABLE departments (id bigint primary key auto_increment,
  Department_name VARCHAR(50) NOT NULL unique, comments VARCHAR(1000));

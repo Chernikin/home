@@ -12,26 +12,6 @@ public abstract class AbstractDaoJdbc<T extends Entity, Id> implements GenericDa
 
     private JdbcTemplate<T, Id> jdbcTemplate = new JdbcTemplate<>();
 
-    protected abstract String getQueryForCreate();
-
-    protected abstract String getQueryForGetById();
-
-    protected abstract String getQueryForUpdate();
-
-    protected abstract String getQueryForGetAll();
-
-    protected abstract String getQueryForDeleteById();
-
-    protected abstract Id getIdForUpdate(T object);
-
-    protected abstract RowMapper<T> getRowMapper();
-
-    protected abstract List<Object> getObjects(T object);
-
-    protected JdbcTemplate<T, Id> getJdbcTemplate() {
-        return jdbcTemplate;
-    }
-
     @Override
     public void create(T object) throws RepositoryException {
         String sql = getQueryForCreate();
@@ -65,6 +45,26 @@ public abstract class AbstractDaoJdbc<T extends Entity, Id> implements GenericDa
     public void deleteById(Id id) throws RepositoryException {
         String sql = getQueryForDeleteById();
         jdbcTemplate.deleteById(sql, id);
+    }
+
+    protected abstract String getQueryForCreate();
+
+    protected abstract String getQueryForGetById();
+
+    protected abstract String getQueryForUpdate();
+
+    protected abstract String getQueryForGetAll();
+
+    protected abstract String getQueryForDeleteById();
+
+    protected abstract Id getIdForUpdate(T object);
+
+    protected abstract RowMapper<T> getRowMapper();
+
+    protected abstract List<Object> getObjects(T object);
+
+    protected JdbcTemplate<T, Id> getJdbcTemplate() {
+        return jdbcTemplate;
     }
 
 }

@@ -14,13 +14,14 @@ public class DepartmentValidator implements Validator<Department> {
     private static Logger logger = Logger.getLogger(DepartmentValidator.class);
 
 
+
     @Override
-    public ValidationResult validate(Department department, String updatableName) {
+    public ValidationResult validate(Department department, Department updatableDepartment) {
         final ValidationResult validationResult = new ValidationResult();
         if (!validateDepartmentName(department)) {
             validationResult.addError("departmentName", "Department name is not valid. Department name cannot be empty or more than 50 characters.");
         }
-        if (!validateDepartmentNameExist(department, updatableName)) {
+        if (!validateDepartmentNameOnExist(department, updatableDepartment)) {
             validationResult.addError("departmentName", "Department name is not valid. This name is already used!");
         }
         if (!validateComments(department)) {
@@ -37,11 +38,11 @@ public class DepartmentValidator implements Validator<Department> {
         return departmentName != null && !departmentName.isEmpty() && departmentName.length() <= DEP_NAME_MAX_LENGTH;
     }
 
-    private boolean validateDepartmentNameExist(Department department, String updatableName) {
-        if (updatableName.equals(department.getDepartmentName())) {
+    private boolean validateDepartmentNameOnExist(Department department, Department updatableDepartment) {
+        if (updatableDepartment.getDepartmentName().equals(department.getDepartmentName())) {
             return true;
         }
-        if (!updatableName.equals(department.getDepartmentName())) {
+        if (!updatableDepartment.getDepartmentName().equals(department.getDepartmentName())) {
             try {
                 return !departmentDao.isExists(department);
             } catch (RepositoryException e) {

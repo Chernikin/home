@@ -4,6 +4,6 @@ import com.aimprosoft.kmb.exceptions.ValidationException;
 
 public interface Validator<T> {
 
-    ValidationResult validate(T object, String field) throws ValidationException;
+    ValidationResult validate(T object, T field) throws ValidationException;
 
 }

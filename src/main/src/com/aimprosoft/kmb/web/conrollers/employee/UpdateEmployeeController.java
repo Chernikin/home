@@ -1,5 +1,6 @@
 package com.aimprosoft.kmb.web.conrollers.employee;
 
+import com.aimprosoft.kmb.exceptions.ApplicationException;
 import com.aimprosoft.kmb.web.conrollers.Controller;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
@@ -19,7 +20,7 @@ public class UpdateEmployeeController implements Controller {
     private EmployeeTemplate employeeTemplate = new EmployeeTemplate();
 
     @Override
-    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
+    public void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ApplicationException {
         final long employeeId = Long.parseLong(req.getParameter("employeeId"));
         final long departmentId = Long.parseLong(req.getParameter("newDepartmentId"));
         final Employee employee = getEmployee(req, employeeId, departmentId);
@@ -34,9 +35,8 @@ public class UpdateEmployeeController implements Controller {
         employeeService.update(employee);
     }
 
-    private Employee getEmployee(HttpServletRequest req, long employeeId, long departmentId) throws ServiceException {
-        Department departmentById;
-        departmentById = departmentService.getById(departmentId);
+    private Employee getEmployee(HttpServletRequest req, Long employeeId, Long departmentId) throws ApplicationException {
+        Department departmentById = departmentService.getById(departmentId);
         final Employee employeeById = employeeService.getById(employeeId);
         final Employee employee = employeeTemplate.extractEmployeeFromRequest(req, employeeById);
         employee.setDepartment(departmentById);

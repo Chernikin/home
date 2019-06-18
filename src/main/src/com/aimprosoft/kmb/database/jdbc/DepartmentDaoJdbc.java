@@ -14,6 +14,24 @@ public class DepartmentDaoJdbc extends AbstractDaoJdbc<Department, Long> impleme
 
     private DepartmentRowMapper departmentRowMapper = new DepartmentRowMapper();
 
+    private static final String CHECK_ON_EXIST = "SELECT count(id) FROM departments WHERE department_name = ?";
+
+    @Override
+    public boolean isExists(Department department) throws RepositoryException {
+        List<Object> params = new ArrayList<>();
+        params.add(department.getDepartmentName());
+        String log = "Can`t check the existence same name of the department.";
+        return getJdbcTemplate().isExist(CHECK_ON_EXIST, params, log);
+    }
+
+    @Override
+    protected List<Object> getObjects(Department department) {
+        List<Object> params = new ArrayList<>();
+        params.add(department.getDepartmentName());
+        params.add(department.getComments());
+        return params;
+    }
+
     @Override
     protected final String getQueryForCreate() {
         return "INSERT INTO departments(department_name, comments) VALUES (?, ?)";
@@ -39,8 +57,6 @@ public class DepartmentDaoJdbc extends AbstractDaoJdbc<Department, Long> impleme
         return "DELETE FROM departments WHERE id = ?";
     }
 
-    private static final String CHECK_ON_EXIST = "SELECT count(id) FROM departments WHERE department_name = ?";
-
 
     @Override
     protected Long getIdForUpdate(Department department) {
@@ -50,23 +66,6 @@ public class DepartmentDaoJdbc extends AbstractDaoJdbc<Department, Long> impleme
     @Override
     protected RowMapper<Department> getRowMapper() {
         return departmentRowMapper;
-    }
-
-    @Override
-    public boolean isExists(Department department) throws RepositoryException {
-        String sql = CHECK_ON_EXIST;
-        List<Object> params = new ArrayList<>();
-        params.add(department.getDepartmentName());
-        String log = "Can`t check the existence same name of the department.";
-        return getJdbcTemplate().isExist(sql, params, log);
-    }
-
-    @Override
-    protected List<Object> getObjects(Department department) {
-        List<Object> params = new ArrayList<>();
-        params.add(department.getDepartmentName());
-        params.add(department.getComments());
-        return params;
     }
 
 }

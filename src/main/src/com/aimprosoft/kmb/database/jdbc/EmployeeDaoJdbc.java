@@ -12,10 +12,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EmployeeDaoJdbc extends AbstractDaoJdbc<Employee, Long> implements EmployeeDao<Long> {
+public class EmployeeDaoJdbc extends AbstractDaoJdbc<Employee, Long> implements EmployeeDao {
 
     private EmployeeRowMapper employeeRowMapper = new EmployeeRowMapper();
     private static Logger logger = Logger.getLogger(EmployeeDaoJdbc.class);
+
+    private static final String GET_ALL_FROM_DEPARTMENT = "SELECT * FROM employees JOIN departments ON employees.department_id = departments.id WHERE department_id = ?";
+    private static final String DELETE_ALL_FROM_DEPARTMENT = "DELETE FROM employees WHERE department_id = ?";
+    private static final String CHECK_ON_EXIST = "SELECT count(id) FROM employees WHERE email = ?";
+
+
+    @Override
+    public List<Employee> getAllFromDepartment(Long id) throws RepositoryException {
+        try (Connection connection = DatabaseConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_FROM_DEPARTMENT)) {
+            preparedStatement.setLong(1, id);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            final List<Employee> employees = new ArrayList<>();
+            while (resultSet.next()) {
+                employees.add(employeeRowMapper.extract(resultSet));
+            }
+            return employees;
+        } catch (SQLException e) {
+            logger.debug("Can`t get all employees from department with id: " + id, e);
+            throw new RepositoryException("Can`t get all employees from department with id: " + id, e);
+        }
+    }
+
+
+    @Override
+    public boolean isExists(Employee employee) throws RepositoryException {
+        List<Object> params = new ArrayList<>();
+        params.add(employee.getEmail());
+        String log = "Can`t check the existence same email of the employee";
+        return getJdbcTemplate().isExist(CHECK_ON_EXIST, params, log);
+    }
+
+    @Override
+    public void deleteAllFromDepartment(Long id) throws RepositoryException {
+        try (Connection connection = DatabaseConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_FROM_DEPARTMENT)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.debug("Can`t delete all from department with id: " + id, e);
+            throw new RepositoryException("Can`t delete all from department with id: " + id, e);
+        }
+    }
+
+    @Override
+    protected List<Object> getObjects(Employee employee) {
+        List<Object> params = new ArrayList<>();
+        params.add(employee.getFirstName());
+        params.add(employee.getLastName());
+        params.add(employee.getEmail());
+        params.add(employee.getAge());
+        params.add(employee.getPhoneNumber());
+        params.add(new Date(employee.getEmploymentDate().getTime()));
+        params.add(employee.getDepartment().getId());
+        return params;
+    }
 
     @Override
     protected final String getQueryForCreate() {
@@ -39,80 +95,21 @@ public class EmployeeDaoJdbc extends AbstractDaoJdbc<Employee, Long> implements 
     }
 
 
-    private static final String GET_ALL_FROM_DEPARTMENT = "SELECT * FROM employees join departments on employees.department_id = departments.id WHERE department_id = ?";
-
     @Override
     protected final String getQueryForDeleteById() {
         return "DELETE FROM employees WHERE id = ?";
     }
 
 
-    private static final String DELETE_ALL_FROM_DEPARTMENT = "DELETE FROM employees WHERE department_id = ?";
-
     @Override
     protected Long getIdForUpdate(Employee employee) {
         return employee.getId();
     }
-
-    private static final String CHECK_ON_EXIST = "SELECT count(id) FROM employees WHERE email = ?";
 
     @Override
     protected RowMapper<Employee> getRowMapper() {
         return employeeRowMapper;
     }
 
-    @Override
-    public List<Employee> getAllFromDepartment(Long id) throws RepositoryException {
-        String sql = GET_ALL_FROM_DEPARTMENT;
-        try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, id);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            final List<Employee> employees = new ArrayList<>();
-            while (resultSet.next()) {
-                employees.add(employeeRowMapper.extract(resultSet));
-            }
-            return employees;
-        } catch (SQLException e) {
-            logger.debug("Can`t get all employees from department with id: " + id, e);
-            throw new RepositoryException("Can`t get all employees from department with id: " + id, e);
-        }
-    }
-
-    @Override
-    public void deleteAllFromDepartment(Long id) throws RepositoryException {
-        String sql = DELETE_ALL_FROM_DEPARTMENT;
-        try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.debug("Can`t delete all from department with id: " + id, e);
-            throw new RepositoryException("Can`t delete all from department with id: " + id, e);
-        }
-    }
-
-
-    @Override
-    public boolean isExists(Employee employee) throws RepositoryException {
-        String sql = CHECK_ON_EXIST;
-        List<Object> params = new ArrayList<>();
-        params.add(employee.getEmail());
-        String log = "Can`t check the existence same email of the employee";
-        return getJdbcTemplate().isExist(sql, params, log);
-    }
-
-    @Override
-    protected List<Object> getObjects(Employee employee) {
-        List<Object> params = new ArrayList<>();
-        params.add(employee.getFirstName());
-        params.add(employee.getLastName());
-        params.add(employee.getEmail());
-        params.add(employee.getAge());
-        params.add(employee.getPhoneNumber());
-        params.add(new Date(employee.getEmploymentDate().getTime()));
-        params.add(employee.getDepartment().getId());
-        return params;
-    }
 
 }

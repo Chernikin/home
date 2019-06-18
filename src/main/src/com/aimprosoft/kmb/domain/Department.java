@@ -11,6 +11,10 @@ public class Department implements Entity<Long> {
     public Department() {
     }
 
+    public Department(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
     public Department(String departmentName, String comments) {
         this.departmentName = departmentName;
         this.comments = comments;

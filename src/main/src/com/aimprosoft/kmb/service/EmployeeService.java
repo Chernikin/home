@@ -1,7 +1,7 @@
 package com.aimprosoft.kmb.service;
 
 import com.aimprosoft.kmb.database.EmployeeDao;
-import com.aimprosoft.kmb.database.daoFactory.EmployeeDaoJdbcFactory;
+import com.aimprosoft.kmb.database.daoFactory.EmployeeDaoFactory;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
@@ -13,11 +13,12 @@ import java.util.List;
 
 public class EmployeeService {
 
-    private final EmployeeDao<Long> employeeDao = EmployeeDaoJdbcFactory.getDaoJdbc();
+    private final EmployeeDao employeeDao = EmployeeDaoFactory.getDao();
     private final Validator<Employee> validator = new EmployeeValidator();
 
     public void create(Employee employee) throws ServiceException {
-        final ValidationResult validationResult = validator.validate(employee, "validateEmail");
+
+        final ValidationResult validationResult = validator.validate(employee, new Employee("validateEmail"));
         if (validationResult.hasError()) {
             throw new ValidationException(validationResult.getError());
         }
@@ -38,9 +39,8 @@ public class EmployeeService {
 
     public Employee update(Employee employee) throws ServiceException {
         final Employee updatableEmployee = employeeDao.getById(employee.getId());
-        final String updatableEmail = updatableEmployee.getEmail();
 
-        final ValidationResult validationResult = validator.validate(employee, updatableEmail);
+        final ValidationResult validationResult = validator.validate(employee, updatableEmployee);
         if (validationResult.hasError()) {
             throw new ValidationException(validationResult.getError());
         }

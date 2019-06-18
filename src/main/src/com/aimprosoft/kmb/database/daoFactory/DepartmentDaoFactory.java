@@ -3,10 +3,10 @@ package com.aimprosoft.kmb.database.daoFactory;
 import com.aimprosoft.kmb.database.DepartmentDao;
 import com.aimprosoft.kmb.database.jdbc.DepartmentDaoJdbc;
 
-public class DepartmentDaoJdbcFactory {
+public class DepartmentDaoFactory {
 
 
-    public static DepartmentDao getDaoJdbc() {
+    public static DepartmentDao getDao() {
         return new DepartmentDaoJdbc();
     }
 }

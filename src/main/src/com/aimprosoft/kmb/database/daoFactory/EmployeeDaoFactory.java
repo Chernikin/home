@@ -3,9 +3,9 @@ package com.aimprosoft.kmb.database.daoFactory;
 import com.aimprosoft.kmb.database.EmployeeDao;
 import com.aimprosoft.kmb.database.jdbc.EmployeeDaoJdbc;
 
-public class EmployeeDaoJdbcFactory {
+public class EmployeeDaoFactory {
 
-    public static EmployeeDao<Long> getDaoJdbc(){
+    public static EmployeeDao getDao(){
         return new EmployeeDaoJdbc();
     }
 }

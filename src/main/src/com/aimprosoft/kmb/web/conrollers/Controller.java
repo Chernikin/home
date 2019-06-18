@@ -1,6 +1,6 @@
 package com.aimprosoft.kmb.web.conrollers;
 
-import com.aimprosoft.kmb.exceptions.ServiceException;
+import com.aimprosoft.kmb.exceptions.ApplicationException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,5 +9,5 @@ import java.io.IOException;
 
 public interface Controller {
 
-    void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServiceException, ServletException, IOException;
+    void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ApplicationException, ServletException, IOException;
 }

@@ -1,7 +1,7 @@
 package com.aimprosoft.kmb.service;
 
 import com.aimprosoft.kmb.database.DepartmentDao;
-import com.aimprosoft.kmb.database.daoFactory.DepartmentDaoJdbcFactory;
+import com.aimprosoft.kmb.database.daoFactory.DepartmentDaoFactory;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.exceptions.ValidationException;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public class DepartmentService {
 
-    private final DepartmentDao departmentDao = DepartmentDaoJdbcFactory.getDaoJdbc();
+    private final DepartmentDao departmentDao = DepartmentDaoFactory.getDao();
     private final Validator<Department> validator = new DepartmentValidator();
     private final EmployeeService employeeService = new EmployeeService();
 
     public void create(Department department) throws ServiceException {
 
-        final ValidationResult validationResult = validator.validate(department, "validateName");
+        final ValidationResult validationResult = validator.validate(department, new Department("validateName"));
         if (validationResult.hasError()) {
             throw new ValidationException(validationResult.getError());
         }
@@ -36,9 +36,8 @@ public class DepartmentService {
 
     public Department update(Department department) throws ServiceException {
         final Department updatableDepartment = departmentDao.getById(department.getId());
-        final String updatableName = updatableDepartment.getDepartmentName();
 
-        final ValidationResult validateResult = validator.validate(department, updatableName);
+        final ValidationResult validateResult = validator.validate(department, updatableDepartment);
         if (validateResult.hasError()) {
             throw new ValidationException(validateResult.getError());
         }
