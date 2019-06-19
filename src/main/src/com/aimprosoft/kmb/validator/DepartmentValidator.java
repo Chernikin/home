@@ -14,14 +14,13 @@ public class DepartmentValidator implements Validator<Department> {
     private static Logger logger = Logger.getLogger(DepartmentValidator.class);
 
 
-
     @Override
-    public ValidationResult validate(Department department, Department updatableDepartment) {
+    public ValidationResult validate(Department department) {
         final ValidationResult validationResult = new ValidationResult();
         if (!validateDepartmentName(department)) {
             validationResult.addError("departmentName", "Department name is not valid. Department name cannot be empty or more than 50 characters.");
         }
-        if (!validateDepartmentNameOnExist(department, updatableDepartment)) {
+        if (!validateDepartmentNameOnExist(department)) {
             validationResult.addError("departmentName", "Department name is not valid. This name is already used!");
         }
         if (!validateComments(department)) {
@@ -38,16 +37,17 @@ public class DepartmentValidator implements Validator<Department> {
         return departmentName != null && !departmentName.isEmpty() && departmentName.length() <= DEP_NAME_MAX_LENGTH;
     }
 
-    private boolean validateDepartmentNameOnExist(Department department, Department updatableDepartment) {
-        if (updatableDepartment.getDepartmentName().equals(department.getDepartmentName())) {
-            return true;
-        }
-        if (!updatableDepartment.getDepartmentName().equals(department.getDepartmentName())) {
-            try {
-                return !departmentDao.isExists(department);
-            } catch (RepositoryException e) {
-                logger.debug("Can`t check department name on exist!");
+    private boolean validateDepartmentNameOnExist(Department department) {
+        try {
+            Department departmentByName = departmentDao.getByName(department.getDepartmentName());
+            if (departmentByName == null || departmentByName.getId().equals(department.getId())) {
+                return true;
             }
+            if (!departmentByName.getId().equals(department.getId())) {
+                return !departmentDao.isExists(department);
+            }
+        } catch (RepositoryException e) {
+            logger.debug("Can`t check department name on exist!");
         }
         return false;
     }

@@ -19,7 +19,7 @@ public class DepartmentService {
 
     public void create(Department department) throws ServiceException {
 
-        final ValidationResult validationResult = validator.validate(department, new Department("validateName"));
+        final ValidationResult validationResult = validator.validate(department);
         if (validationResult.hasError()) {
             throw new ValidationException(validationResult.getError());
         }
@@ -35,9 +35,8 @@ public class DepartmentService {
     }
 
     public Department update(Department department) throws ServiceException {
-        final Department updatableDepartment = departmentDao.getById(department.getId());
 
-        final ValidationResult validateResult = validator.validate(department, updatableDepartment);
+        final ValidationResult validateResult = validator.validate(department);
         if (validateResult.hasError()) {
             throw new ValidationException(validateResult.getError());
         }

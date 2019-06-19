@@ -43,7 +43,7 @@
         </tr>
         <tr>
             <td>Employment date</td>
-            <td><input type="date" name="employmentDate"
+            <td><input  type="date" name="employmentDate"
                        value="<fmt:formatDate value="${errors.incorrectEmployeeData.employmentDate}" pattern="yyyy-MM-dd"/>"
             ></td>
             <td><c:out value="${errors.employmentDate}"> </c:out></td>

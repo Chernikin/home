@@ -7,11 +7,8 @@ import com.aimprosoft.kmb.exceptions.RepositoryException;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
-import java.util.Objects;
 
 public class EmployeeValidator implements Validator<Employee> {
-
-    private final ValidationResult validationResult = new ValidationResult();
 
     private static final int MAX_FIRST_NAME_LENGTH = 25;
     private static final int MAX_LAST_NAME_LENGTH = 30;
@@ -24,29 +21,30 @@ public class EmployeeValidator implements Validator<Employee> {
 
 
     @Override
-    public ValidationResult validate(Employee employee, Employee updatableEmployee) {
+    public ValidationResult validate(Employee employee) {
+        ValidationResult validationResult = new ValidationResult();
         if (!validateFirstName(employee)) {
-            validationResult.addError("firstName", "First name is not valid. First name cannot be empty or more than 25 characters.");
+            validationResult.addError("firstName", "First name is not valid. First name can`t be empty or more than 25 characters.");
         }
         if (!validateLastName(employee)) {
-            validationResult.addError("lastName", "Last name is not valid. Last name cannot be empty or more than 30 characters.");
+            validationResult.addError("lastName", "Last name is not valid. Last name can`t be empty or more than 30 characters.");
         }
         if (!validateEmail(employee)) {
-            validationResult.addError("email", "E-mail is not valid. E-mail cannot be empty or more than 50 characters. Must contain '@' and '.' .");
+            validationResult.addError("email", "E-mail is not valid. E-mail can`t be empty or more than 50 characters. Must contain '@' and '.' .");
         }
-        if (!validateEmailExist(employee, updatableEmployee)) {
+        if (!validateEmailOnExist(employee)) {
             validationResult.addError("email", "E-mail is not valid. This e-mail is already used!");
         }
         if (!validateAge(employee)) {
-            validationResult.addError("age", "Age is not valid. Age cannot be empty or less than 18 and more than 99 years old.");
+            validationResult.addError("age", "Age is not valid. Age can`t contain a char, be empty or less than 18 and more than 99 years old.");
         }
         if (!validatePhoneNumber(employee)) {
-            validationResult.addError("phoneNumber", "Phone number is not valid. Phone number cannot be more than 13 digits.");
+            validationResult.addError("phoneNumber", "Phone number is not valid. Phone number can`t be more than 13 digits.");
         }
         if (!validateEmploymentDate(employee)) {
-            validationResult.addError("employmentDate", "Employment date is not valid. Date cannot be empty.");
+            validationResult.addError("employmentDate", "Employment date is not valid. Date can`t be empty.");
         }
-        if(validationResult.hasError()){
+        if (validationResult.hasError()) {
             validationResult.addError("incorrectEmployeeData", employee);
         }
         return validationResult;
@@ -67,16 +65,17 @@ public class EmployeeValidator implements Validator<Employee> {
         return email != null && !email.isEmpty() && email.contains("@") && email.contains(".") && email.length() <= MAX_EMAIL_LENGTH;
     }
 
-    private boolean validateEmailExist(Employee employee, Employee updatableEmployee) {
-        if (updatableEmployee.getEmail().equals(employee.getEmail())) {
-            return true;
-        }
-        if (!updatableEmployee.getEmail().equals(employee.getEmail())) {
-            try {
-                return !employeeDao.isExists(employee);
-            } catch (RepositoryException e) {
-                logger.error("Can`t check email on exist!");
+    private boolean validateEmailOnExist(Employee employee) {
+        try {
+            Employee employeeByEmail = employeeDao.getByEmail(employee.getEmail());
+            if (employeeByEmail == null || employeeByEmail.getId().equals(employee.getId())) {
+                return true;
             }
+            if (!employeeByEmail.getId().equals(employee.getId())) {
+                return !employeeDao.isExists(employee);
+            }
+        } catch (RepositoryException e) {
+            logger.error("Can`t check email on exist!");
         }
         return false;
     }

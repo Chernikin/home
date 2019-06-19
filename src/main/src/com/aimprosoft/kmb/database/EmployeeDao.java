@@ -12,4 +12,6 @@ public interface EmployeeDao extends GenericDao<Employee, Long> {
     boolean isExists(Employee employee) throws RepositoryException;
 
     void deleteAllFromDepartment(Long id) throws RepositoryException;
+
+    Employee getByEmail(String email) throws RepositoryException;
 }

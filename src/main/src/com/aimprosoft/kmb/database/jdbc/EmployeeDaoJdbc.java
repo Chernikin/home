@@ -1,7 +1,9 @@
 package com.aimprosoft.kmb.database.jdbc;
 
 import com.aimprosoft.kmb.database.EmployeeDao;
+import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
+import com.aimprosoft.kmb.domain.Entity;
 import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.database.rowMapper.EmployeeRowMapper;
 import com.aimprosoft.kmb.database.rowMapper.RowMapper;
@@ -14,12 +16,12 @@ import java.util.List;
 
 public class EmployeeDaoJdbc extends AbstractDaoJdbc<Employee, Long> implements EmployeeDao {
 
-    private EmployeeRowMapper employeeRowMapper = new EmployeeRowMapper();
     private static Logger logger = Logger.getLogger(EmployeeDaoJdbc.class);
 
     private static final String GET_ALL_FROM_DEPARTMENT = "SELECT * FROM employees JOIN departments ON employees.department_id = departments.id WHERE department_id = ?";
     private static final String DELETE_ALL_FROM_DEPARTMENT = "DELETE FROM employees WHERE department_id = ?";
     private static final String CHECK_ON_EXIST = "SELECT count(id) FROM employees WHERE email = ?";
+    private static final String GET_BY_EMAIL = "SELECT * FROM employees JOIN departments ON employees.department_id = departments.id WHERE email = ?";
 
 
     @Override
@@ -30,13 +32,30 @@ public class EmployeeDaoJdbc extends AbstractDaoJdbc<Employee, Long> implements 
             final ResultSet resultSet = preparedStatement.executeQuery();
             final List<Employee> employees = new ArrayList<>();
             while (resultSet.next()) {
-                employees.add(employeeRowMapper.extract(resultSet));
+                employees.add(getRowMapper().extract(resultSet));
             }
             return employees;
         } catch (SQLException e) {
             logger.debug("Can`t get all employees from department with id: " + id, e);
             throw new RepositoryException("Can`t get all employees from department with id: " + id, e);
         }
+    }
+
+    @Override
+    public Employee getByEmail(String email) throws RepositoryException {
+        Employee result = null;
+        try (Connection connection = DatabaseConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMAIL)) {
+            preparedStatement.setString(1, email);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = getRowMapper().extract(resultSet);
+            }
+        } catch (SQLException e) {
+            logger.debug("Can`t get employee by email. ", e);
+            throw new RepositoryException("Can`t get employee by email. ", e);
+        }
+        return result;
     }
 
 
@@ -108,7 +127,7 @@ public class EmployeeDaoJdbc extends AbstractDaoJdbc<Employee, Long> implements 
 
     @Override
     protected RowMapper<Employee> getRowMapper() {
-        return employeeRowMapper;
+        return new EmployeeRowMapper();
     }
 
 

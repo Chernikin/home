@@ -18,7 +18,7 @@ public class EmployeeService {
 
     public void create(Employee employee) throws ServiceException {
 
-        final ValidationResult validationResult = validator.validate(employee, new Employee("validateEmail"));
+        final ValidationResult validationResult = validator.validate(employee);
         if (validationResult.hasError()) {
             throw new ValidationException(validationResult.getError());
         }
@@ -38,9 +38,8 @@ public class EmployeeService {
     }
 
     public Employee update(Employee employee) throws ServiceException {
-        final Employee updatableEmployee = employeeDao.getById(employee.getId());
 
-        final ValidationResult validationResult = validator.validate(employee, updatableEmployee);
+        final ValidationResult validationResult = validator.validate(employee);
         if (validationResult.hasError()) {
             throw new ValidationException(validationResult.getError());
         }

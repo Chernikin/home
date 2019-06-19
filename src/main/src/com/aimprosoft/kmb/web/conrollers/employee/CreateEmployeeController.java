@@ -3,6 +3,7 @@ package com.aimprosoft.kmb.web.conrollers.employee;
 import com.aimprosoft.kmb.domain.Department;
 import com.aimprosoft.kmb.domain.Employee;
 import com.aimprosoft.kmb.exceptions.ApplicationException;
+import com.aimprosoft.kmb.exceptions.ServiceException;
 import com.aimprosoft.kmb.service.DepartmentService;
 import com.aimprosoft.kmb.service.EmployeeService;
 import com.aimprosoft.kmb.web.conrollers.Controller;
@@ -30,7 +31,7 @@ public class CreateEmployeeController implements Controller {
 
     }
 
-    private Employee getEmployee(HttpServletRequest req) throws ApplicationException {
+    private Employee getEmployee(HttpServletRequest req) throws ServiceException {
         final Employee employeeNew = new Employee();
         return employeeTemplate.extractEmployeeFromRequest(req, employeeNew);
     }
