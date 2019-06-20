@@ -1,12 +1,10 @@
 package com.aimprosoft.kmb.database.jdbc;
 
 import com.aimprosoft.kmb.database.EmployeeDao;
-import com.aimprosoft.kmb.domain.Department;
-import com.aimprosoft.kmb.domain.Employee;
-import com.aimprosoft.kmb.domain.Entity;
-import com.aimprosoft.kmb.exceptions.RepositoryException;
 import com.aimprosoft.kmb.database.rowMapper.EmployeeRowMapper;
 import com.aimprosoft.kmb.database.rowMapper.RowMapper;
+import com.aimprosoft.kmb.domain.Employee;
+import com.aimprosoft.kmb.exceptions.RepositoryException;
 import org.apache.log4j.Logger;
 
 import java.sql.*;

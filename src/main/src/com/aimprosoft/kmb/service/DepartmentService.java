@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DepartmentService {
 
-    private final DepartmentDao departmentDao = DepartmentDaoFactory.getDao();
+    private final DepartmentDao departmentDao = DepartmentDaoFactory.getDao(DepartmentDaoFactory.DaoType.jpa);
     private final Validator<Department> validator = new DepartmentValidator();
     private final EmployeeService employeeService = new EmployeeService();
 

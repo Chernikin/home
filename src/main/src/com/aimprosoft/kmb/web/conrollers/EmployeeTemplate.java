@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EmployeeTemplate {
@@ -22,13 +23,13 @@ public class EmployeeTemplate {
     private DepartmentService departmentService = new DepartmentService();
 
     public Employee extractEmployeeFromRequest(HttpServletRequest req, Employee employee) throws ServiceException {
+
         req.setAttribute("departmentId", req.getParameter("departmentId"));
-        Department department = departmentService.getById(Long.parseLong(req.getParameter("departmentId")));
+
         employee.setFirstName(req.getParameter("firstName"));
         employee.setLastName(req.getParameter("lastName"));
         employee.setEmail(req.getParameter("email"));
         employee.setPhoneNumber(req.getParameter("phoneNumber"));
-        employee.setDepartment(department);
         try {
             employee.setAge(Integer.parseInt(req.getParameter("age")));
             employee.setEmploymentDate(simpleDateFormat.parse(req.getParameter("employmentDate")));
@@ -38,8 +39,16 @@ public class EmployeeTemplate {
         return employee;
     }
 
-    private Employee getInvalidEmployee(HttpServletRequest req, Employee employee) throws ValidationException {
+    private Employee getInvalidEmployee(HttpServletRequest req, Employee employee) throws ServiceException {
+        if (req.getParameter("employeeId") != null) {
+            req.setAttribute("employeeId", req.getParameter("employeeId"));
+        }
+
+        final List<Department> allDepartments = departmentService.getAll();
+        req.setAttribute("allDepartments", allDepartments);
+
         final ValidationResult validationResult = validator.validate(employee);
+
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("firstName", req.getParameter("firstName"));
         parameter.put("lastName", req.getParameter("lastName"));
@@ -51,6 +60,7 @@ public class EmployeeTemplate {
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
+
         validationResult.addError("incorrectEmployeeData", parameter);
         throw new ValidationException(validationResult.getError());
     }
