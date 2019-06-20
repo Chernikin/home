@@ -1,12 +1,17 @@
 package com.aimprosoft.kmb.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 
+@javax.persistence.Entity
+@Table(name = "departments")
 public class Department implements Entity<Long> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "Department_name")
     private String departmentName;
     private String comments;
 
