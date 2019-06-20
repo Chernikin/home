@@ -13,7 +13,7 @@ import java.util.List;
 
 public class EmployeeService {
 
-    private final EmployeeDao employeeDao = EmployeeDaoFactory.getDao(EmployeeDaoFactory.DaoType.jpa);
+    private final EmployeeDao employeeDao = EmployeeDaoFactory.getDao();
     private final Validator<Employee> validator = new EmployeeValidator();
 
     public void create(Employee employee) throws ServiceException {
